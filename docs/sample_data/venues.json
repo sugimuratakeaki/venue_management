@@ -1,0 +1,1085 @@
+{
+  "venues": [
+    {
+      "id": 10,
+      "venue_no": "V010",
+      "venue_name": "NOCプラザ",
+      "official_name": "NOCプラザ",
+      "prefecture": "新潟県",
+      "city": "新潟市",
+      "address": "〒950-8756 新潟県新潟市東区卸新町2丁目853番地3",
+      "postal_code": "950-8756",
+      "phone_number": "025-273-4181",
+      "email": null,
+      "official_url": null,
+      "reservation_url": null,
+      "google_map_url": "https://maps.google.com/maps?q=新潟県新潟市東区卸新町2丁目853番地3",
+      "contact_person": null,
+      "contact_department": null,
+      "rooms": [
+        {
+          "id": 1,
+          "room_name": "ホール",
+          "room_type": "ホール",
+          "floor": null,
+          "ceiling_height": 4.0,
+          "floor_area": 489,
+          "capacity_theater": 200,
+          "capacity_school": 160,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": false,
+          "has_stage": true,
+          "notes": "控室備え付けあり（本体料金込み）"
+        },
+        {
+          "id": 2,
+          "room_name": "101会議室",
+          "room_type": "会議室",
+          "floor": "1",
+          "ceiling_height": 3.0,
+          "floor_area": 164,
+          "capacity_theater": 80,
+          "capacity_school": 58,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": false,
+          "has_stage": false,
+          "notes": "控室として203会議室(40㎡)利用可能"
+        }
+      ],
+      "stations": [
+        {
+          "id": 1,
+          "station_name": "新潟駅",
+          "line_name": "JR信越本線・白新線・越後線",
+          "exit_name": "南口",
+          "transportation_method": "タクシー",
+          "walking_time": null,
+          "taxi_time": 15,
+          "bus_time": null,
+          "distance_km": 5,
+          "notes": "新潟駅南口から5km"
+        }
+      ],
+      "equipment": {
+        "projector": true,
+        "screen": true,
+        "microphone": true,
+        "wireless_microphone": true,
+        "whiteboard": true,
+        "podium": true,
+        "pointer": true,
+        "sound_system": true,
+        "lighting_control": true,
+        "air_conditioning": true,
+        "wifi": false,
+        "lan_cable": false,
+        "power_outlets": true,
+        "extension_cords": false,
+        "hdmi_cable": false,
+        "video_conference": false
+      },
+      "equipment_fees": {
+        "podium": 2000,
+        "sound_system_with_mic": 2000,
+        "microphone": 1000,
+        "whiteboard": 0,
+        "notes": "机追加1台500円、研修実施日の2日分"
+      },
+      "facilities": {
+        "parking_capacity": 160,
+        "parking_fee": "無料",
+        "parking_notes": null,
+        "can_eat_drink": true,
+        "can_wear_shoes": true,
+        "is_barrier_free": false,
+        "has_elevator": true,
+        "has_escalator": false,
+        "is_earthquake_resistant": true,
+        "earthquake_resistance_year": null,
+        "has_emergency_exit": true,
+        "has_aed": false,
+        "has_nursing_room": false,
+        "has_prayer_room": false,
+        "has_smoking_area": false,
+        "has_vending_machine": true,
+        "has_convenience_store": false,
+        "has_restaurant": false,
+        "has_cafe": false,
+        "has_catering_service": false
+      },
+      "operating_hours": {
+        "weekday_open": "08:30",
+        "weekday_close": "21:00",
+        "weekend_open": "08:30",
+        "weekend_close": "21:00",
+        "holiday_open": null,
+        "holiday_close": null,
+        "closed_days": null,
+        "notes": "8:30から利用可能"
+      },
+      "fees": {
+        "main_venue_fee_2_5_days": {
+          "hall": "380000-450000",
+          "room_101": "144000-171000"
+        },
+        "control_room_fee_2_5_days": {
+          "hall": 0,
+          "room_101": 43000
+        },
+        "estimated_total_fee": {
+          "hall": "390000-460000",
+          "room_101": "197000-224000"
+        },
+        "deposit_required": false,
+        "tax_included": true,
+        "notes": "2.5日～3日間の料金"
+      },
+      "reservation_conditions": {
+        "advance_reservation_days": null,
+        "min_reservation_days": null,
+        "reservation_method": "電話",
+        "tentative_reservation_possible": true,
+        "tentative_reservation_period": null,
+        "payment_deadline": "前日まで",
+        "payment_method": "銀行振込",
+        "notes": null
+      },
+      "cancellation_policy": {
+        "free_cancellation_days": 91,
+        "cancellation_fee_90_days": "50%",
+        "cancellation_fee_30_days": "70%",
+        "cancellation_fee_7_days": null,
+        "cancellation_fee_day_of": "100%",
+        "notes": "90日前50%、30日前70%、当日100%"
+      },
+      "package_handling": {
+        "can_receive_package": true,
+        "advance_delivery_possible": false,
+        "delivery_on_day": true,
+        "package_storage_location": null,
+        "package_handler": null,
+        "notes": "当日AMであればOK"
+      },
+      "nearby_facilities": {
+        "convenience_stores": [],
+        "restaurants": [],
+        "hotels": [],
+        "parking_lots": [],
+        "notes": null
+      },
+      "tags": ["会議室", "ホール", "研修施設", "防災訓練可", "大規模イベント可"],
+      "status": "active",
+      "last_verified_date": "2025-09-07",
+      "created_by": "admin@example.com",
+      "updated_by": "admin@example.com",
+      "created_at": "2025-09-07T10:00:00Z",
+      "updated_at": "2025-09-07T10:00:00Z"
+    },
+    {
+      "id": 11,
+      "venue_no": "V011",
+      "venue_name": "駅まえオフィス貸会議室",
+      "official_name": "駅まえオフィス貸会議室",
+      "prefecture": "新潟県",
+      "city": "新潟市",
+      "address": "〒950-0087 新潟県新潟市中央区東大通1-1-1第五マルカビル7階",
+      "postal_code": "950-0087",
+      "phone_number": "025-365-1525",
+      "email": null,
+      "official_url": null,
+      "reservation_url": null,
+      "google_map_url": "https://maps.google.com/maps?q=新潟県新潟市中央区東大通1-1-1",
+      "contact_person": "中山 隆志",
+      "contact_department": null,
+      "rooms": [
+        {
+          "id": 1,
+          "room_name": "大会議室",
+          "room_type": "会議室",
+          "floor": "7",
+          "ceiling_height": 2.0,
+          "floor_area": 180.54,
+          "capacity_theater": 64,
+          "capacity_school": 40,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": false,
+          "has_stage": false,
+          "notes": null
+        }
+      ],
+      "stations": [
+        {
+          "id": 1,
+          "station_name": "新潟駅",
+          "line_name": "JR信越本線・白新線・越後線",
+          "exit_name": null,
+          "transportation_method": "徒歩",
+          "walking_time": 1,
+          "taxi_time": null,
+          "bus_time": null,
+          "distance_km": null,
+          "notes": "JR新潟駅から徒歩1分"
+        }
+      ],
+      "equipment": {
+        "projector": true,
+        "screen": true,
+        "microphone": false,
+        "wireless_microphone": false,
+        "whiteboard": true,
+        "podium": false,
+        "pointer": false,
+        "sound_system": false,
+        "lighting_control": false,
+        "air_conditioning": true,
+        "wifi": false,
+        "lan_cable": false,
+        "power_outlets": true,
+        "extension_cords": false,
+        "hdmi_cable": false,
+        "video_conference": false
+      },
+      "equipment_fees": {
+        "notes": "基本設備は料金に含まれる"
+      },
+      "facilities": {
+        "parking_capacity": 0,
+        "parking_fee": null,
+        "parking_notes": "コインパーキング多数有",
+        "can_eat_drink": true,
+        "can_wear_shoes": true,
+        "is_barrier_free": false,
+        "has_elevator": true,
+        "has_escalator": false,
+        "is_earthquake_resistant": true,
+        "earthquake_resistance_year": null,
+        "has_emergency_exit": true,
+        "has_aed": false,
+        "has_nursing_room": false,
+        "has_prayer_room": false,
+        "has_smoking_area": false,
+        "has_vending_machine": false,
+        "has_convenience_store": false,
+        "has_restaurant": false,
+        "has_cafe": false,
+        "has_catering_service": false
+      },
+      "operating_hours": {
+        "weekday_open": "08:45",
+        "weekday_close": "19:00",
+        "weekend_open": "08:45",
+        "weekend_close": "19:00",
+        "holiday_open": null,
+        "holiday_close": null,
+        "closed_days": null,
+        "notes": "8:45入館～19:00退館"
+      },
+      "fees": {
+        "estimated_total_fee": {
+          "large_conference_room": 322900
+        },
+        "deposit_required": false,
+        "tax_included": true,
+        "notes": "2.5日間の概算料金"
+      },
+      "reservation_conditions": {
+        "advance_reservation_days": null,
+        "min_reservation_days": null,
+        "reservation_method": "HP申込フォーム",
+        "tentative_reservation_possible": true,
+        "tentative_reservation_period": null,
+        "payment_deadline": "利用日の2～3週間前",
+        "payment_method": "銀行振込",
+        "notes": "予約は原則HP上の申込フォームから、申込メールの返信をもって仮予約完了"
+      },
+      "cancellation_policy": {
+        "free_cancellation_days": 15,
+        "cancellation_fee_14_days": "発生",
+        "notes": "利用予定日の14日前よりキャンセル料が発生"
+      },
+      "package_handling": {
+        "can_receive_package": true,
+        "advance_delivery_possible": false,
+        "delivery_on_day": false,
+        "package_storage_location": "管理室",
+        "package_handler": null,
+        "notes": null
+      },
+      "nearby_facilities": {
+        "convenience_stores": [],
+        "restaurants": [],
+        "hotels": [],
+        "parking_lots": ["多数のコインパーキング"],
+        "notes": "駅前立地のため周辺施設充実"
+      },
+      "tags": ["駅近", "会議室", "研修施設", "ビジネス"],
+      "status": "active",
+      "last_verified_date": "2025-09-07",
+      "created_by": "admin@example.com",
+      "updated_by": "admin@example.com",
+      "created_at": "2025-09-07T10:00:00Z",
+      "updated_at": "2025-09-07T10:00:00Z"
+    },
+    {
+      "id": 12,
+      "venue_no": "V012",
+      "venue_name": "ユートピアくびき希望館",
+      "official_name": "ユートピアくびき希望館",
+      "prefecture": "新潟県",
+      "city": "上越市",
+      "address": "〒942-0127 新潟県上越市頸城区百間町716",
+      "postal_code": "942-0127",
+      "phone_number": "025-526-5111",
+      "email": null,
+      "official_url": null,
+      "reservation_url": null,
+      "google_map_url": "https://maps.google.com/maps?q=新潟県上越市頸城区百間町716",
+      "contact_person": "奈須武彦",
+      "contact_department": "上越市役所 市民安全課 防災係",
+      "rooms": [
+        {
+          "id": 1,
+          "room_name": "第３会議室",
+          "room_type": "会議室",
+          "floor": null,
+          "ceiling_height": 2.6,
+          "floor_area": 208.55,
+          "capacity_theater": 90,
+          "capacity_school": null,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": false,
+          "has_stage": false,
+          "notes": null
+        }
+      ],
+      "stations": [
+        {
+          "id": 1,
+          "station_name": "くびき駅",
+          "line_name": "北越急行ほくほく線",
+          "exit_name": null,
+          "transportation_method": "バス・徒歩",
+          "walking_time": 3,
+          "taxi_time": null,
+          "bus_time": null,
+          "distance_km": null,
+          "notes": "頸城バス南川線海洋センター前下車、徒歩3分"
+        }
+      ],
+      "equipment": {
+        "projector": false,
+        "screen": false,
+        "microphone": false,
+        "wireless_microphone": false,
+        "whiteboard": false,
+        "podium": false,
+        "pointer": false,
+        "sound_system": false,
+        "lighting_control": false,
+        "air_conditioning": false,
+        "wifi": false,
+        "lan_cable": false,
+        "power_outlets": false,
+        "extension_cords": false,
+        "hdmi_cable": false,
+        "video_conference": false
+      },
+      "equipment_fees": {
+        "notes": null
+      },
+      "facilities": {
+        "parking_capacity": null,
+        "parking_fee": null,
+        "parking_notes": null,
+        "can_eat_drink": false,
+        "can_wear_shoes": false,
+        "is_barrier_free": false,
+        "has_elevator": false,
+        "has_escalator": false,
+        "is_earthquake_resistant": false,
+        "earthquake_resistance_year": null,
+        "has_emergency_exit": false,
+        "has_aed": false,
+        "has_nursing_room": false,
+        "has_prayer_room": false,
+        "has_smoking_area": false,
+        "has_vending_machine": false,
+        "has_convenience_store": false,
+        "has_restaurant": false,
+        "has_cafe": false,
+        "has_catering_service": false
+      },
+      "operating_hours": {
+        "weekday_open": null,
+        "weekday_close": null,
+        "weekend_open": null,
+        "weekend_close": null,
+        "holiday_open": null,
+        "holiday_close": null,
+        "closed_days": null,
+        "notes": null
+      },
+      "fees": {
+        "notes": null
+      },
+      "reservation_conditions": {
+        "advance_reservation_days": null,
+        "min_reservation_days": null,
+        "reservation_method": "電話",
+        "tentative_reservation_possible": false,
+        "tentative_reservation_period": null,
+        "payment_deadline": null,
+        "payment_method": null,
+        "notes": null
+      },
+      "cancellation_policy": {
+        "notes": null
+      },
+      "package_handling": {
+        "can_receive_package": false,
+        "advance_delivery_possible": false,
+        "delivery_on_day": false,
+        "package_storage_location": null,
+        "package_handler": null,
+        "notes": null
+      },
+      "nearby_facilities": {
+        "convenience_stores": [],
+        "restaurants": [],
+        "hotels": [],
+        "parking_lots": [],
+        "notes": null
+      },
+      "tags": ["会議室", "公共施設"],
+      "status": "active",
+      "last_verified_date": "2025-09-07",
+      "created_by": "admin@example.com",
+      "updated_by": "admin@example.com",
+      "created_at": "2025-09-07T10:00:00Z",
+      "updated_at": "2025-09-07T10:00:00Z"
+    },
+    {
+      "id": 13,
+      "venue_no": "V013",
+      "venue_name": "清水マリンビル",
+      "official_name": "清水マリンビル",
+      "prefecture": "静岡県",
+      "city": "静岡市",
+      "address": "〒424-0922 静岡県静岡市清水区日の出町10-80",
+      "postal_code": "424-0922",
+      "phone_number": "054-353-2311",
+      "email": "marine-bld@hinode-dream.jp",
+      "official_url": null,
+      "reservation_url": null,
+      "google_map_url": "https://maps.google.com/maps?q=静岡県静岡市清水区日の出町10-80",
+      "contact_person": null,
+      "contact_department": null,
+      "rooms": [
+        {
+          "id": 1,
+          "room_name": "多目的ルーム",
+          "room_type": "多目的室",
+          "floor": null,
+          "ceiling_height": null,
+          "floor_area": 875,
+          "capacity_theater": 1000,
+          "capacity_school": null,
+          "capacity_banquet": null,
+          "width": 35,
+          "depth": 25,
+          "is_dividable": false,
+          "has_stage": false,
+          "notes": null
+        }
+      ],
+      "stations": [
+        {
+          "id": 1,
+          "station_name": "清水駅",
+          "line_name": "JR東海道本線",
+          "exit_name": null,
+          "transportation_method": "バス・徒歩",
+          "walking_time": 5,
+          "taxi_time": null,
+          "bus_time": 10,
+          "distance_km": null,
+          "notes": "静鉄バス「波止場・フェルケール博物館」下車、徒歩5分"
+        }
+      ],
+      "equipment": {
+        "projector": false,
+        "screen": true,
+        "microphone": true,
+        "wireless_microphone": true,
+        "whiteboard": true,
+        "podium": true,
+        "pointer": false,
+        "sound_system": true,
+        "lighting_control": false,
+        "air_conditioning": true,
+        "wifi": false,
+        "lan_cable": false,
+        "power_outlets": true,
+        "extension_cords": false,
+        "hdmi_cable": false,
+        "video_conference": false
+      },
+      "equipment_fees": {
+        "notes": null
+      },
+      "facilities": {
+        "parking_capacity": 500,
+        "parking_fee": "有料30分100円",
+        "parking_notes": null,
+        "can_eat_drink": false,
+        "can_wear_shoes": false,
+        "is_barrier_free": false,
+        "has_elevator": false,
+        "has_escalator": false,
+        "is_earthquake_resistant": false,
+        "earthquake_resistance_year": null,
+        "has_emergency_exit": false,
+        "has_aed": false,
+        "has_nursing_room": false,
+        "has_prayer_room": false,
+        "has_smoking_area": false,
+        "has_vending_machine": false,
+        "has_convenience_store": false,
+        "has_restaurant": false,
+        "has_cafe": false,
+        "has_catering_service": false
+      },
+      "operating_hours": {
+        "weekday_open": null,
+        "weekday_close": null,
+        "weekend_open": null,
+        "weekend_close": null,
+        "holiday_open": null,
+        "holiday_close": null,
+        "closed_days": null,
+        "notes": null
+      },
+      "fees": {
+        "estimated_total_fee": {
+          "multi_purpose_room": 700000
+        },
+        "deposit_required": false,
+        "tax_included": true,
+        "notes": null
+      },
+      "reservation_conditions": {
+        "advance_reservation_days": null,
+        "min_reservation_days": null,
+        "reservation_method": "電話",
+        "tentative_reservation_possible": true,
+        "tentative_reservation_period": null,
+        "payment_deadline": null,
+        "payment_method": "銀行振込",
+        "notes": "電話での仮予約、前払い振り込み"
+      },
+      "cancellation_policy": {
+        "notes": null
+      },
+      "package_handling": {
+        "can_receive_package": false,
+        "advance_delivery_possible": false,
+        "delivery_on_day": false,
+        "package_storage_location": null,
+        "package_handler": null,
+        "notes": null
+      },
+      "nearby_facilities": {
+        "convenience_stores": [],
+        "restaurants": [],
+        "hotels": [],
+        "parking_lots": [],
+        "notes": null
+      },
+      "tags": ["多目的室", "大規模イベント可", "駐車場完備"],
+      "status": "active",
+      "last_verified_date": "2025-09-07",
+      "created_by": "admin@example.com",
+      "updated_by": "admin@example.com",
+      "created_at": "2025-09-07T10:00:00Z",
+      "updated_at": "2025-09-07T10:00:00Z"
+    },
+    {
+      "id": 14,
+      "venue_no": "V014",
+      "venue_name": "グランシップ静岡",
+      "official_name": "グランシップ静岡",
+      "prefecture": "静岡県",
+      "city": "静岡市",
+      "address": "〒422-8019 静岡市駿河区東静岡二丁目3番1号",
+      "postal_code": "422-8019",
+      "phone_number": "054-203-5713",
+      "email": "yoyaku@granship.or.jp",
+      "official_url": null,
+      "reservation_url": null,
+      "google_map_url": "https://maps.google.com/maps?q=静岡市駿河区東静岡二丁目3番1号",
+      "contact_person": null,
+      "contact_department": null,
+      "rooms": [
+        {
+          "id": 1,
+          "room_name": "1001・2連結会議室",
+          "room_type": "会議室",
+          "floor": "10",
+          "ceiling_height": null,
+          "floor_area": 450,
+          "capacity_theater": 300,
+          "capacity_school": null,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": true,
+          "has_stage": false,
+          "notes": "1001と1002の連結使用"
+        }
+      ],
+      "stations": [
+        {
+          "id": 1,
+          "station_name": "東静岡駅",
+          "line_name": "JR東海道本線",
+          "exit_name": "南口",
+          "transportation_method": "徒歩",
+          "walking_time": 3,
+          "taxi_time": null,
+          "bus_time": null,
+          "distance_km": null,
+          "notes": "東静岡駅南口から徒歩3分"
+        }
+      ],
+      "equipment": {
+        "projector": true,
+        "screen": true,
+        "microphone": true,
+        "wireless_microphone": true,
+        "whiteboard": true,
+        "podium": true,
+        "pointer": false,
+        "sound_system": true,
+        "lighting_control": false,
+        "air_conditioning": true,
+        "wifi": false,
+        "lan_cable": false,
+        "power_outlets": true,
+        "extension_cords": false,
+        "hdmi_cable": false,
+        "video_conference": false
+      },
+      "equipment_fees": {
+        "notes": null
+      },
+      "facilities": {
+        "parking_capacity": null,
+        "parking_fee": null,
+        "parking_notes": null,
+        "can_eat_drink": false,
+        "can_wear_shoes": false,
+        "is_barrier_free": true,
+        "has_elevator": true,
+        "has_escalator": true,
+        "is_earthquake_resistant": true,
+        "earthquake_resistance_year": null,
+        "has_emergency_exit": true,
+        "has_aed": true,
+        "has_nursing_room": false,
+        "has_prayer_room": false,
+        "has_smoking_area": false,
+        "has_vending_machine": true,
+        "has_convenience_store": false,
+        "has_restaurant": true,
+        "has_cafe": true,
+        "has_catering_service": false
+      },
+      "operating_hours": {
+        "weekday_open": null,
+        "weekday_close": null,
+        "weekend_open": null,
+        "weekend_close": null,
+        "holiday_open": null,
+        "holiday_close": null,
+        "closed_days": null,
+        "notes": null
+      },
+      "fees": {
+        "estimated_total_fee": {
+          "conference_room": 650000
+        },
+        "deposit_required": false,
+        "tax_included": true,
+        "notes": null
+      },
+      "reservation_conditions": {
+        "advance_reservation_days": null,
+        "min_reservation_days": null,
+        "reservation_method": "申込書",
+        "tentative_reservation_possible": true,
+        "tentative_reservation_period": null,
+        "payment_deadline": null,
+        "payment_method": null,
+        "notes": "申込書を3通提出（2ヶ月前までにキャンセルをしないと有料になる）"
+      },
+      "cancellation_policy": {
+        "free_cancellation_days": 60,
+        "cancellation_fee_60_days": "発生",
+        "notes": "2ヶ月前からキャンセル料発生"
+      },
+      "package_handling": {
+        "can_receive_package": false,
+        "advance_delivery_possible": false,
+        "delivery_on_day": false,
+        "package_storage_location": null,
+        "package_handler": null,
+        "notes": null
+      },
+      "nearby_facilities": {
+        "convenience_stores": [],
+        "restaurants": ["館内レストラン"],
+        "hotels": [],
+        "parking_lots": [],
+        "notes": null
+      },
+      "tags": ["会議室", "コンベンション施設", "駅近", "大規模イベント可"],
+      "status": "active",
+      "last_verified_date": "2025-09-07",
+      "created_by": "admin@example.com",
+      "updated_by": "admin@example.com",
+      "created_at": "2025-09-07T10:00:00Z",
+      "updated_at": "2025-09-07T10:00:00Z"
+    },
+    {
+      "id": 15,
+      "venue_no": "V015",
+      "venue_name": "名古屋栄ビルディング",
+      "official_name": "名古屋栄ビルディング",
+      "prefecture": "愛知県",
+      "city": "名古屋市",
+      "address": "〒461-0008 愛知県名古屋市東区武平町5-1",
+      "postal_code": "461-0008",
+      "phone_number": "052-961-1507",
+      "email": null,
+      "official_url": null,
+      "reservation_url": null,
+      "google_map_url": "https://maps.google.com/maps?q=愛知県名古屋市東区武平町5-1",
+      "contact_person": "大西郁子",
+      "contact_department": "名古屋栄ビル管理センター",
+      "rooms": [
+        {
+          "id": 1,
+          "room_name": "中会議室",
+          "room_type": "会議室",
+          "floor": null,
+          "ceiling_height": 2.4,
+          "floor_area": 164,
+          "capacity_theater": 64,
+          "capacity_school": null,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": false,
+          "has_stage": false,
+          "notes": null
+        }
+      ],
+      "stations": [
+        {
+          "id": 1,
+          "station_name": "栄駅",
+          "line_name": "地下鉄東山線・名城線",
+          "exit_name": "5番出口",
+          "transportation_method": "徒歩",
+          "walking_time": 2,
+          "taxi_time": null,
+          "bus_time": null,
+          "distance_km": null,
+          "notes": "地下鉄5番出口より徒歩2分"
+        },
+        {
+          "id": 2,
+          "station_name": "栄駅",
+          "line_name": "名鉄瀬戸線",
+          "exit_name": null,
+          "transportation_method": "徒歩",
+          "walking_time": 5,
+          "taxi_time": null,
+          "bus_time": null,
+          "distance_km": null,
+          "notes": "名鉄栄駅より徒歩5分"
+        }
+      ],
+      "equipment": {
+        "projector": false,
+        "screen": false,
+        "microphone": false,
+        "wireless_microphone": false,
+        "whiteboard": false,
+        "podium": false,
+        "pointer": false,
+        "sound_system": false,
+        "lighting_control": false,
+        "air_conditioning": true,
+        "wifi": false,
+        "lan_cable": false,
+        "power_outlets": true,
+        "extension_cords": false,
+        "hdmi_cable": false,
+        "video_conference": false
+      },
+      "equipment_fees": {
+        "notes": null
+      },
+      "facilities": {
+        "parking_capacity": null,
+        "parking_fee": null,
+        "parking_notes": "荷物搬入搬出のみ使用可、近隣駐車場複数あり",
+        "can_eat_drink": false,
+        "can_wear_shoes": false,
+        "is_barrier_free": false,
+        "has_elevator": true,
+        "has_escalator": false,
+        "is_earthquake_resistant": false,
+        "earthquake_resistance_year": null,
+        "has_emergency_exit": false,
+        "has_aed": false,
+        "has_nursing_room": false,
+        "has_prayer_room": false,
+        "has_smoking_area": false,
+        "has_vending_machine": false,
+        "has_convenience_store": false,
+        "has_restaurant": false,
+        "has_cafe": false,
+        "has_catering_service": false
+      },
+      "operating_hours": {
+        "weekday_open": null,
+        "weekday_close": null,
+        "weekend_open": null,
+        "weekend_close": null,
+        "holiday_open": null,
+        "holiday_close": null,
+        "closed_days": null,
+        "notes": null
+      },
+      "fees": {
+        "estimated_total_fee": {
+          "medium_conference_room": 317000
+        },
+        "deposit_required": false,
+        "tax_included": true,
+        "notes": null
+      },
+      "reservation_conditions": {
+        "advance_reservation_days": 180,
+        "min_reservation_days": null,
+        "reservation_method": "電話・FAX",
+        "tentative_reservation_possible": true,
+        "tentative_reservation_period": 3,
+        "payment_deadline": "使用日の1ヶ月後",
+        "payment_method": "銀行振込",
+        "notes": "使用日の6ヶ月前から予約受付。事前に当ビル１階の管理センター（平日10:00～16:30）に電話で空き状況確認。予約可能な場合は3日以内に指定の申込書をFAX又は持参"
+      },
+      "cancellation_policy": {
+        "free_cancellation_days": 8,
+        "cancellation_fee_7_days": "会場準備料金相当額",
+        "notes": "使用日を含む7日前からキャンセル料発生"
+      },
+      "package_handling": {
+        "can_receive_package": false,
+        "advance_delivery_possible": false,
+        "delivery_on_day": false,
+        "package_storage_location": null,
+        "package_handler": null,
+        "notes": null
+      },
+      "nearby_facilities": {
+        "convenience_stores": [],
+        "restaurants": [],
+        "hotels": [],
+        "parking_lots": ["近隣に複数の駐車場あり"],
+        "notes": null
+      },
+      "tags": ["会議室", "駅近", "ビジネス", "複数駅利用可"],
+      "status": "active",
+      "last_verified_date": "2025-09-07",
+      "created_by": "admin@example.com",
+      "updated_by": "admin@example.com",
+      "created_at": "2025-09-07T10:00:00Z",
+      "updated_at": "2025-09-07T10:00:00Z"
+    },
+    {
+      "id": 16,
+      "venue_no": "V016",
+      "venue_name": "名古屋商工会議所",
+      "official_name": "名古屋商工会議所",
+      "prefecture": "愛知県",
+      "city": "名古屋市",
+      "address": "〒460-8422 名古屋市中区栄2-10-19名古屋商工会議所ビル",
+      "postal_code": "460-8422",
+      "phone_number": "052-223-5620",
+      "email": null,
+      "official_url": null,
+      "reservation_url": null,
+      "google_map_url": "https://maps.google.com/maps?q=名古屋市中区栄2-10-19",
+      "contact_person": null,
+      "contact_department": null,
+      "rooms": [
+        {
+          "id": 1,
+          "room_name": "会議室ABC",
+          "room_type": "会議室",
+          "floor": null,
+          "ceiling_height": null,
+          "floor_area": null,
+          "capacity_theater": null,
+          "capacity_school": null,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": true,
+          "has_stage": false,
+          "notes": "A・B・Cの3室連結可能"
+        },
+        {
+          "id": 2,
+          "room_name": "会議室AB",
+          "room_type": "会議室",
+          "floor": null,
+          "ceiling_height": null,
+          "floor_area": null,
+          "capacity_theater": null,
+          "capacity_school": null,
+          "capacity_banquet": null,
+          "width": null,
+          "depth": null,
+          "is_dividable": true,
+          "has_stage": false,
+          "notes": "A・Bの2室連結"
+        }
+      ],
+      "stations": [
+        {
+          "id": 1,
+          "station_name": "伏見駅",
+          "line_name": "地下鉄東山線・鶴舞線",
+          "exit_name": "5番出口",
+          "transportation_method": "徒歩",
+          "walking_time": 5,
+          "taxi_time": null,
+          "bus_time": null,
+          "distance_km": null,
+          "notes": "名古屋駅より東山線で1区間、5番出口より南へ徒歩5分"
+        }
+      ],
+      "equipment": {
+        "projector": false,
+        "screen": false,
+        "microphone": false,
+        "wireless_microphone": false,
+        "whiteboard": false,
+        "podium": false,
+        "pointer": false,
+        "sound_system": false,
+        "lighting_control": false,
+        "air_conditioning": true,
+        "wifi": false,
+        "lan_cable": false,
+        "power_outlets": true,
+        "extension_cords": false,
+        "hdmi_cable": false,
+        "video_conference": false
+      },
+      "equipment_fees": {
+        "notes": null
+      },
+      "facilities": {
+        "parking_capacity": null,
+        "parking_fee": null,
+        "parking_notes": null,
+        "can_eat_drink": false,
+        "can_wear_shoes": false,
+        "is_barrier_free": true,
+        "has_elevator": true,
+        "has_escalator": false,
+        "is_earthquake_resistant": true,
+        "earthquake_resistance_year": null,
+        "has_emergency_exit": true,
+        "has_aed": false,
+        "has_nursing_room": false,
+        "has_prayer_room": false,
+        "has_smoking_area": false,
+        "has_vending_machine": false,
+        "has_convenience_store": false,
+        "has_restaurant": false,
+        "has_cafe": false,
+        "has_catering_service": false
+      },
+      "operating_hours": {
+        "weekday_open": null,
+        "weekday_close": null,
+        "weekend_open": null,
+        "weekend_close": null,
+        "holiday_open": null,
+        "holiday_close": null,
+        "closed_days": null,
+        "notes": null
+      },
+      "fees": {
+        "notes": null
+      },
+      "reservation_conditions": {
+        "advance_reservation_days": null,
+        "min_reservation_days": null,
+        "reservation_method": "電話",
+        "tentative_reservation_possible": false,
+        "tentative_reservation_period": null,
+        "payment_deadline": null,
+        "payment_method": null,
+        "notes": null
+      },
+      "cancellation_policy": {
+        "notes": null
+      },
+      "package_handling": {
+        "can_receive_package": false,
+        "advance_delivery_possible": false,
+        "delivery_on_day": false,
+        "package_storage_location": null,
+        "package_handler": null,
+        "notes": null
+      },
+      "nearby_facilities": {
+        "convenience_stores": [],
+        "restaurants": [],
+        "hotels": [],
+        "parking_lots": [],
+        "notes": null
+      },
+      "tags": ["会議室", "商工会議所", "分割可能"],
+      "status": "active",
+      "last_verified_date": "2025-09-07",
+      "created_by": "admin@example.com",
+      "updated_by": "admin@example.com",
+      "created_at": "2025-09-07T10:00:00Z",
+      "updated_at": "2025-09-07T10:00:00Z"
+    }
+  ],
+  "metadata": {
+    "total_count": 7,
+    "data_source": "Excel files from 防災士研修センター（2_新潟.xlsx、2_静岡　清水.xlsx）",
+    "export_date": "2025-09-07",
+    "version": "2.1",
+    "schema_version": "2.1",
+    "notes": "複数部屋・複数駅対応、URL管理機能追加、路線名必須化"
+  }
+}
