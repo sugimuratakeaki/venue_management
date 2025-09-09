@@ -102,9 +102,6 @@
 | desk_count | INT | YES | | NULL | 机の数 |
 | chair_count | INT | YES | | NULL | 椅子の数 |
 | capacity | INT | NO | IDX | | 収容人数 |
-| has_control_room | BOOLEAN | NO | | FALSE | 控室有無 |
-| control_room_name | VARCHAR(100) | YES | | NULL | 控室名 |
-| control_room_area | DECIMAL(6,2) | YES | | NULL | 控室広さ（平方メートル） |
 | is_main_room | BOOLEAN | NO | | TRUE | メイン会場フラグ |
 | created_at | TIMESTAMP | NO | | CURRENT_TIMESTAMP | 作成日時 |
 | updated_at | TIMESTAMP | YES | | NULL ON UPDATE CURRENT_TIMESTAMP | 更新日時 |
@@ -116,7 +113,33 @@
 
 ---
 
-### 3.3 venues_stations（会場最寄り駅情報）
+### 3.3 room_control_rooms（部屋控室情報）
+
+**テーブル説明**: 各部屋に付属する複数の控室情報を管理
+
+#### SQLite/PostgreSQL対応
+
+| カラム名 | SQLite型 | PostgreSQL型 | NULL | キー | デフォルト | 説明 |
+|---------|----------|--------------|------|------|-----------|------|
+| id | INTEGER | BIGSERIAL | NO | PK | AUTO | 控室ID |
+| room_id | INTEGER | BIGINT | NO | FK,IDX | | 部屋ID |
+| control_room_name | TEXT | VARCHAR(100) | NO | | | 控室名 |
+| control_room_area | REAL | DECIMAL(6,2) | YES | | NULL | 控室広さ（平方メートル） |
+| desk_count | INTEGER | INT | YES | | NULL | 机の数 |
+| chair_count | INTEGER | INT | YES | | NULL | 椅子の数 |
+| capacity | INTEGER | INT | YES | | NULL | 収容人数 |
+| notes | TEXT | TEXT | YES | | NULL | 備考 |
+| display_order | INTEGER | INT | NO | | 1 | 表示順 |
+| created_at | TIMESTAMP | TIMESTAMP | NO | | CURRENT_TIMESTAMP | 作成日時 |
+| updated_at | TIMESTAMP | TIMESTAMP | YES | | NULL ON UPDATE CURRENT_TIMESTAMP | 更新日時 |
+
+**インデックス**:
+- PRIMARY KEY (id)
+- INDEX idx_room_control (room_id, display_order)
+
+---
+
+### 3.4 venues_stations（会場最寄り駅情報）
 
 **テーブル説明**: 会場の複数最寄り駅情報を管理
 
@@ -139,7 +162,7 @@
 
 ---
 
-### 3.4 venue_facilities（会場設備情報）
+### 3.5 venue_facilities（会場設備情報）
 
 **テーブル説明**: 会場の設備・備品情報を管理
 

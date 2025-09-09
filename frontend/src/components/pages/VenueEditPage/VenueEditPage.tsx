@@ -82,33 +82,127 @@ const Select = styled.select`
 const RoomList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing.md};
+  gap: ${theme.spacing.lg};
 `;
 
 const RoomItem = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr auto;
-  gap: ${theme.spacing.md};
-  align-items: center;
-  padding: ${theme.spacing.md};
-  background: ${theme.colors.neutral[50]};
+  padding: ${theme.spacing.lg};
+  background-color: ${theme.colors.neutral[50]};
   border-radius: ${theme.borderRadius.md};
+  border: 1px solid ${theme.colors.neutral[200]};
+`;
+
+const RoomHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${theme.spacing.md};
+  padding-bottom: ${theme.spacing.sm};
+  border-bottom: 1px solid ${theme.colors.neutral[200]};
+`;
+
+const RoomTitle = styled.h4`
+  font-size: ${theme.fontSize.lg};
+  font-weight: ${theme.fontWeight.semibold};
+  color: ${theme.colors.neutral[800]};
+  margin: 0;
+`;
+
+const RoomGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: ${theme.spacing.md};
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const RoomInputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.xs};
+`;
+
+const RoomLabel = styled.label`
+  font-size: ${theme.fontSize.sm};
+  font-weight: ${theme.fontWeight.medium};
+  color: ${theme.colors.neutral[600]};
+`;
+
+const ControlRoomSection = styled.div`
+  margin-top: ${theme.spacing.lg};
+  padding: ${theme.spacing.md};
+  background-color: ${theme.colors.neutral[100]};
+  border-radius: ${theme.borderRadius.md};
+  border: 1px solid ${theme.colors.neutral[300]};
+`;
+
+const ControlRoomList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.md};
+  margin-top: ${theme.spacing.md};
+`;
+
+const ControlRoomItem = styled.div`
+  padding: ${theme.spacing.md};
+  background-color: ${theme.colors.neutral[0]};
+  border-radius: ${theme.borderRadius.sm};
+  border: 1px solid ${theme.colors.neutral[200]};
+`;
+
+const ControlRoomHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${theme.spacing.sm};
+`;
+
+const ControlRoomTitle = styled.h5`
+  font-size: ${theme.fontSize.md};
+  font-weight: ${theme.fontWeight.medium};
+  color: ${theme.colors.neutral[700]};
+  margin: 0;
 `;
 
 const StationList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing.md};
+  gap: ${theme.spacing.lg};
 `;
 
 const StationItem = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr 2fr auto;
-  gap: ${theme.spacing.md};
-  align-items: center;
-  padding: ${theme.spacing.md};
-  background: ${theme.colors.neutral[50]};
+  padding: ${theme.spacing.lg};
+  background-color: ${theme.colors.neutral[50]};
   border-radius: ${theme.borderRadius.md};
+  border: 1px solid ${theme.colors.neutral[200]};
+`;
+
+const StationHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${theme.spacing.md};
+  padding-bottom: ${theme.spacing.sm};
+  border-bottom: 1px solid ${theme.colors.neutral[200]};
+`;
+
+const StationTitle = styled.h4`
+  font-size: ${theme.fontSize.lg};
+  font-weight: ${theme.fontWeight.semibold};
+  color: ${theme.colors.neutral[800]};
+  margin: 0;
+`;
+
+const StationGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: ${theme.spacing.md};
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const CheckboxGroup = styled.div`
@@ -190,9 +284,24 @@ export const VenueEditPage: React.FC<VenueEditPageProps> = ({ venueId, onBack })
         desk_count: '100',
         chair_count: '200',
         capacity: '200',
-        has_control_room: true,
-        control_room_name: '控室A',
-        control_room_area: '40'
+        control_rooms: [
+          {
+            name: '控室A',
+            area: '40',
+            desk_count: '10',
+            chair_count: '20',
+            capacity: '20',
+            notes: '本体料金込み'
+          },
+          {
+            name: '控室B',
+            area: '25',
+            desk_count: '5',
+            chair_count: '10',
+            capacity: '10',
+            notes: '別途料金'
+          }
+        ]
       },
       { 
         name: '中会議室',
@@ -201,9 +310,16 @@ export const VenueEditPage: React.FC<VenueEditPageProps> = ({ venueId, onBack })
         desk_count: '50',
         chair_count: '100',
         capacity: '100',
-        has_control_room: false,
-        control_room_name: '',
-        control_room_area: ''
+        control_rooms: [
+          {
+            name: '控室203',
+            area: '30',
+            desk_count: '8',
+            chair_count: '15',
+            capacity: '15',
+            notes: '203会議室利用可能'
+          }
+        ]
       },
     ],
     
@@ -468,26 +584,258 @@ export const VenueEditPage: React.FC<VenueEditPageProps> = ({ venueId, onBack })
           <RoomList>
             {formData.rooms.map((room, index) => (
               <RoomItem key={index}>
-                <Input value={room.name} placeholder="部屋名" />
-                <Input value={room.ceiling_height} placeholder="天井高(m)" />
-                <Input value={room.floor_area} placeholder="面積(㎡)" />
-                <Input value={room.desk_count} placeholder="机数" />
-                <Input value={room.chair_count} placeholder="椅子数" />
-                <Input value={room.capacity} placeholder="収容人数" />
-                <Button variant="text" size="small">削除</Button>
+                <RoomHeader>
+                  <RoomTitle>部屋 {index + 1}</RoomTitle>
+                  <Button variant="text" size="small" style={{ color: theme.colors.error }}>削除</Button>
+                </RoomHeader>
+                
+                <RoomGrid>
+                  <RoomInputGroup>
+                    <RoomLabel>部屋名 *</RoomLabel>
+                    <Input 
+                      value={room.name} 
+                      placeholder="例：大会議室"
+                      onChange={(e) => {
+                        const newRooms = [...formData.rooms];
+                        newRooms[index].name = e.target.value;
+                        setFormData({ ...formData, rooms: newRooms });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>天井高（メートル）</RoomLabel>
+                    <Input 
+                      value={room.ceiling_height} 
+                      placeholder="例：4.0"
+                      type="number"
+                      step="0.1"
+                      onChange={(e) => {
+                        const newRooms = [...formData.rooms];
+                        newRooms[index].ceiling_height = e.target.value;
+                        setFormData({ ...formData, rooms: newRooms });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>面積（平方メートル）</RoomLabel>
+                    <Input 
+                      value={room.floor_area} 
+                      placeholder="例：489"
+                      type="number"
+                      onChange={(e) => {
+                        const newRooms = [...formData.rooms];
+                        newRooms[index].floor_area = e.target.value;
+                        setFormData({ ...formData, rooms: newRooms });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>机数</RoomLabel>
+                    <Input 
+                      value={room.desk_count} 
+                      placeholder="例：100"
+                      type="number"
+                      onChange={(e) => {
+                        const newRooms = [...formData.rooms];
+                        newRooms[index].desk_count = e.target.value;
+                        setFormData({ ...formData, rooms: newRooms });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>椅子数</RoomLabel>
+                    <Input 
+                      value={room.chair_count} 
+                      placeholder="例：200"
+                      type="number"
+                      onChange={(e) => {
+                        const newRooms = [...formData.rooms];
+                        newRooms[index].chair_count = e.target.value;
+                        setFormData({ ...formData, rooms: newRooms });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>最大収容人数</RoomLabel>
+                    <Input 
+                      value={room.capacity} 
+                      placeholder="例：200"
+                      type="number"
+                      onChange={(e) => {
+                        const newRooms = [...formData.rooms];
+                        newRooms[index].capacity = e.target.value;
+                        setFormData({ ...formData, rooms: newRooms });
+                      }}
+                    />
+                  </RoomInputGroup>
+                </RoomGrid>
+                
+                {/* 控室情報 */}
+                <ControlRoomSection>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h5 style={{ margin: 0, fontSize: theme.fontSize.md, fontWeight: theme.fontWeight.medium }}>
+                      控室情報
+                    </h5>
+                    <Button 
+                      variant="outline" 
+                      size="small"
+                      onClick={() => {
+                        const newRooms = [...formData.rooms];
+                        if (!newRooms[index].control_rooms) {
+                          newRooms[index].control_rooms = [];
+                        }
+                        newRooms[index].control_rooms.push({
+                          name: '',
+                          area: '',
+                          desk_count: '',
+                          chair_count: '',
+                          capacity: '',
+                          notes: ''
+                        });
+                        setFormData({ ...formData, rooms: newRooms });
+                      }}
+                    >
+                      + 控室を追加
+                    </Button>
+                  </div>
+                  
+                  {room.control_rooms && room.control_rooms.length > 0 ? (
+                    <ControlRoomList>
+                      {room.control_rooms.map((controlRoom, controlIndex) => (
+                        <ControlRoomItem key={controlIndex}>
+                          <ControlRoomHeader>
+                            <ControlRoomTitle>控室 {controlIndex + 1}</ControlRoomTitle>
+                            <Button 
+                              variant="text" 
+                              size="small" 
+                              style={{ color: theme.colors.error }}
+                              onClick={() => {
+                                const newRooms = [...formData.rooms];
+                                newRooms[index].control_rooms.splice(controlIndex, 1);
+                                setFormData({ ...formData, rooms: newRooms });
+                              }}
+                            >
+                              削除
+                            </Button>
+                          </ControlRoomHeader>
+                          
+                          <RoomGrid>
+                            <RoomInputGroup>
+                              <RoomLabel>控室名</RoomLabel>
+                              <Input 
+                                value={controlRoom.name}
+                                placeholder="例：控室A"
+                                onChange={(e) => {
+                                  const newRooms = [...formData.rooms];
+                                  newRooms[index].control_rooms[controlIndex].name = e.target.value;
+                                  setFormData({ ...formData, rooms: newRooms });
+                                }}
+                              />
+                            </RoomInputGroup>
+                            
+                            <RoomInputGroup>
+                              <RoomLabel>面積（㎡）</RoomLabel>
+                              <Input 
+                                value={controlRoom.area}
+                                placeholder="例：40"
+                                type="number"
+                                onChange={(e) => {
+                                  const newRooms = [...formData.rooms];
+                                  newRooms[index].control_rooms[controlIndex].area = e.target.value;
+                                  setFormData({ ...formData, rooms: newRooms });
+                                }}
+                              />
+                            </RoomInputGroup>
+                            
+                            <RoomInputGroup>
+                              <RoomLabel>机数</RoomLabel>
+                              <Input 
+                                value={controlRoom.desk_count}
+                                placeholder="例：10"
+                                type="number"
+                                onChange={(e) => {
+                                  const newRooms = [...formData.rooms];
+                                  newRooms[index].control_rooms[controlIndex].desk_count = e.target.value;
+                                  setFormData({ ...formData, rooms: newRooms });
+                                }}
+                              />
+                            </RoomInputGroup>
+                            
+                            <RoomInputGroup>
+                              <RoomLabel>椅子数</RoomLabel>
+                              <Input 
+                                value={controlRoom.chair_count}
+                                placeholder="例：20"
+                                type="number"
+                                onChange={(e) => {
+                                  const newRooms = [...formData.rooms];
+                                  newRooms[index].control_rooms[controlIndex].chair_count = e.target.value;
+                                  setFormData({ ...formData, rooms: newRooms });
+                                }}
+                              />
+                            </RoomInputGroup>
+                            
+                            <RoomInputGroup>
+                              <RoomLabel>収容人数</RoomLabel>
+                              <Input 
+                                value={controlRoom.capacity}
+                                placeholder="例：20"
+                                type="number"
+                                onChange={(e) => {
+                                  const newRooms = [...formData.rooms];
+                                  newRooms[index].control_rooms[controlIndex].capacity = e.target.value;
+                                  setFormData({ ...formData, rooms: newRooms });
+                                }}
+                              />
+                            </RoomInputGroup>
+                            
+                            <RoomInputGroup>
+                              <RoomLabel>備考</RoomLabel>
+                              <Input 
+                                value={controlRoom.notes}
+                                placeholder="例：本体料金込み"
+                                onChange={(e) => {
+                                  const newRooms = [...formData.rooms];
+                                  newRooms[index].control_rooms[controlIndex].notes = e.target.value;
+                                  setFormData({ ...formData, rooms: newRooms });
+                                }}
+                              />
+                            </RoomInputGroup>
+                          </RoomGrid>
+                        </ControlRoomItem>
+                      ))}
+                    </ControlRoomList>
+                  ) : (
+                    <div style={{ marginTop: theme.spacing.md, color: theme.colors.neutral[500], fontSize: theme.fontSize.sm }}>
+                      控室が登録されていません
+                    </div>
+                  )}
+                </ControlRoomSection>
               </RoomItem>
             ))}
-            <div style={{ marginTop: theme.spacing.md }}>
-              <CheckboxLabel>
-                <input type="checkbox" />
-                控室あり
-              </CheckboxLabel>
-              <FormGrid style={{ marginTop: theme.spacing.sm }}>
-                <Input placeholder="控室名" />
-                <Input placeholder="控室面積(㎡)" />
-              </FormGrid>
-            </div>
-            <Button variant="outline" size="small">部屋を追加</Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                const newRoom = {
+                  name: '',
+                  ceiling_height: '',
+                  floor_area: '',
+                  desk_count: '',
+                  chair_count: '',
+                  capacity: '',
+                  control_rooms: []
+                };
+                setFormData({ ...formData, rooms: [...formData.rooms, newRoom] });
+              }}
+            >
+              + 部屋を追加
+            </Button>
           </RoomList>
         </Section>
 
@@ -497,20 +845,100 @@ export const VenueEditPage: React.FC<VenueEditPageProps> = ({ venueId, onBack })
           <StationList>
             {formData.stations.map((station, index) => (
               <StationItem key={index}>
-                <Input value={station.name} placeholder="駅名" />
-                <Input value={station.line} placeholder="路線名" />
-                <Select value={station.transport_method}>
-                  <option value="徒歩">徒歩</option>
-                  <option value="バス">バス</option>
-                  <option value="タクシー">タクシー</option>
-                  <option value="車">車</option>
-                </Select>
-                <Input value={station.travel_time} placeholder="所要時間(分)" />
-                <Input value={station.notes} placeholder="備考" />
-                <Button variant="text" size="small">削除</Button>
+                <StationHeader>
+                  <StationTitle>最寄り駅 {index + 1}</StationTitle>
+                  <Button variant="text" size="small" style={{ color: theme.colors.error }}>削除</Button>
+                </StationHeader>
+                
+                <StationGrid>
+                  <RoomInputGroup>
+                    <RoomLabel>駅名 *</RoomLabel>
+                    <Input 
+                      value={station.name} 
+                      placeholder="例：新潟駅"
+                      onChange={(e) => {
+                        const newStations = [...formData.stations];
+                        newStations[index].name = e.target.value;
+                        setFormData({ ...formData, stations: newStations });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>路線名 *</RoomLabel>
+                    <Input 
+                      value={station.line} 
+                      placeholder="例：JR信越本線"
+                      onChange={(e) => {
+                        const newStations = [...formData.stations];
+                        newStations[index].line = e.target.value;
+                        setFormData({ ...formData, stations: newStations });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>移動方法</RoomLabel>
+                    <Select 
+                      value={station.transport_method}
+                      onChange={(e) => {
+                        const newStations = [...formData.stations];
+                        newStations[index].transport_method = e.target.value;
+                        setFormData({ ...formData, stations: newStations });
+                      }}
+                    >
+                      <option value="徒歩">徒歩</option>
+                      <option value="バス">バス</option>
+                      <option value="タクシー">タクシー</option>
+                      <option value="車">車</option>
+                    </Select>
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>所要時間（分）</RoomLabel>
+                    <Input 
+                      value={station.travel_time} 
+                      placeholder="例：15"
+                      type="number"
+                      onChange={(e) => {
+                        const newStations = [...formData.stations];
+                        newStations[index].travel_time = e.target.value;
+                        setFormData({ ...formData, stations: newStations });
+                      }}
+                    />
+                  </RoomInputGroup>
+                  
+                  <RoomInputGroup>
+                    <RoomLabel>備考</RoomLabel>
+                    <Input 
+                      value={station.notes} 
+                      placeholder="例：南口から5km"
+                      onChange={(e) => {
+                        const newStations = [...formData.stations];
+                        newStations[index].notes = e.target.value;
+                        setFormData({ ...formData, stations: newStations });
+                      }}
+                    />
+                  </RoomInputGroup>
+                </StationGrid>
               </StationItem>
             ))}
-            <Button variant="outline" size="small">最寄り駅を追加</Button>
+            
+            <Button 
+              variant="outline"
+              onClick={() => {
+                const newStation = {
+                  name: '',
+                  line: '',
+                  transport_method: '徒歩',
+                  travel_time: '',
+                  notes: ''
+                };
+                setFormData({ ...formData, stations: [...formData.stations, newStation] });
+              }}
+            >
+              + 最寄り駅を追加
+            </Button>
           </StationList>
         </Section>
 

@@ -9,7 +9,6 @@ export { AISupportPage } from './AISupportPage/AISupportPage';
 export { PasswordResetPage } from './PasswordResetPage/PasswordResetPage';
 export { ReservationManagePage } from './ReservationManagePage/ReservationManagePage';
 export { CalendarPage } from './CalendarPage/CalendarPage';
-export { UsageReportPage } from './UsageReportPage/UsageReportPage';
 export { ComparisonReportPage } from './ComparisonReportPage/ComparisonReportPage';
 export { UserManagePage } from './UserManagePage/UserManagePage';
 export { SystemSettingsPage } from './SystemSettingsPage/SystemSettingsPage';
