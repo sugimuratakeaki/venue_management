@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Input, Text, Card } from '../../atoms';
+import { FilterGroup } from '../../molecules';
 import { theme } from '../../../styles/theme';
+import venuesData from '../../../data/venues.json';
 
 const Container = styled.div`
   max-width: 1400px;
@@ -9,24 +11,70 @@ const Container = styled.div`
   padding: ${theme.spacing.lg};
 `;
 
-const SearchPanel = styled(Card)`
+// クイック絞り込みセクション
+const QuickFilterSection = styled(Card)`
   padding: ${theme.spacing.lg};
   margin-bottom: ${theme.spacing.xl};
 `;
 
-const SearchForm = styled.div`
+const QuickFilterHeader = styled.div`
   display: flex;
-  gap: ${theme.spacing.md};
-  align-items: flex-end;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${theme.spacing.lg};
 `;
 
-const SearchGroup = styled.div`
+const QuickFilterGroups = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.lg};
+`;
+
+// 詳細検索セクション（アコーディオン）
+const DetailedSearchSection = styled(Card)`
+  padding: 0;
+  margin-bottom: ${theme.spacing.xl};
+  overflow: hidden;
+`;
+
+const AccordionHeader = styled.div<{ isOpen: boolean }>`
+  padding: ${theme.spacing.lg};
+  background: ${theme.colors.neutral[50]};
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: ${theme.colors.neutral[100]};
+  }
+  
+  &::after {
+    content: '${props => props.isOpen ? '▲' : '▼'}';
+    color: ${theme.colors.neutral[600]};
+    font-size: ${theme.fontSize.sm};
+  }
+`;
+
+const AccordionContent = styled.div<{ isOpen: boolean }>`
+  max-height: ${props => props.isOpen ? '1000px' : '0'};
+  opacity: ${props => props.isOpen ? '1' : '0'};
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+`;
+
+const DetailedSearchForm = styled.div`
+  padding: ${theme.spacing.lg};
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: ${theme.spacing.md};
+`;
+
+const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing.xs};
-  flex: 1;
-  min-width: 200px;
 `;
 
 const Label = styled.label`
@@ -48,30 +96,97 @@ const Select = styled.select`
   }
 `;
 
-const FilterSection = styled.div`
-  display: flex;
-  gap: ${theme.spacing.md};
-  margin-top: ${theme.spacing.md};
-  padding-top: ${theme.spacing.md};
-  border-top: 1px solid ${theme.colors.neutral[200]};
-  flex-wrap: wrap;
-`;
-
-const CheckboxItem = styled.label`
+const RangeInputGroup = styled.div`
   display: flex;
   align-items: center;
+  gap: ${theme.spacing.sm};
+`;
+
+const RangeInput = styled(Input)`
+  flex: 1;
+`;
+
+// 選択中のフィルタータグ
+const ActiveFiltersSection = styled.div`
+  margin-bottom: ${theme.spacing.lg};
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${theme.spacing.sm};
+  align-items: center;
+`;
+
+const FilterTag = styled.div`
+  display: inline-flex;
+  align-items: center;
   gap: ${theme.spacing.xs};
-  cursor: pointer;
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  background: ${theme.colors.primary[100]};
+  color: ${theme.colors.primary[700]};
+  border-radius: ${theme.borderRadius.full};
   font-size: ${theme.fontSize.sm};
-  color: ${theme.colors.neutral[700]};
+`;
+
+const RemoveTagButton = styled.button`
+  background: none;
+  border: none;
+  color: ${theme.colors.primary[700]};
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
   
-  input {
-    width: 16px;
-    height: 16px;
+  &:hover {
+    color: ${theme.colors.primary[900]};
   }
 `;
 
+// 結果セクション
 const ResultsSection = styled.div``;
+
+// 会場選択エリア
+const VenueSelectionArea = styled(Card)`
+  margin-bottom: ${theme.spacing.lg};
+  padding: ${theme.spacing.lg};
+`;
+
+const VenueSelectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${theme.spacing.md};
+`;
+
+const VenueCardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: ${theme.spacing.md};
+`;
+
+const VenueCard = styled.div<{ selected: boolean }>`
+  padding: ${theme.spacing.md};
+  border: 2px solid ${props => props.selected ? theme.colors.primary[500] : theme.colors.neutral[300]};
+  border-radius: ${theme.borderRadius.md};
+  background-color: ${props => props.selected ? theme.colors.primary[50] : theme.colors.neutral[0]};
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: ${theme.colors.primary[400]};
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+`;
+
+const VenueCardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.sm};
+  margin-bottom: ${theme.spacing.sm};
+`;
+
+const VenueCardBody = styled.div`
+  font-size: ${theme.fontSize.sm};
+  color: ${theme.colors.neutral[600]};
+`;
 
 const ResultsHeader = styled.div`
   display: flex;
@@ -153,6 +268,29 @@ const Td = styled.td`
   }
 `;
 
+const ItemTh = styled(Th)`
+  position: sticky;
+  left: 0;
+  background-color: ${theme.colors.primary[600]};
+  z-index: 3;
+  min-width: 180px;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+`;
+
+const ItemTd = styled(Td)`
+  position: sticky;
+  left: 0;
+  background-color: ${theme.colors.neutral[0]};
+  font-weight: ${theme.fontWeight.medium};
+  z-index: 1;
+  min-width: 180px;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.05);
+  
+  ${Tr}:hover & {
+    background-color: ${theme.colors.neutral[50]};
+  }
+`;
+
 const CategoryRow = styled(Tr)`
   background-color: ${theme.colors.primary[50]};
   
@@ -181,20 +319,6 @@ const VenueNameTh = styled(Th)`
   }
 `;
 
-const StatusBadge = styled.span<{ status: string }>`
-  display: inline-block;
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.full};
-  font-size: ${theme.fontSize.xs};
-  font-weight: ${theme.fontWeight.medium};
-  background-color: ${props => 
-    props.status === 'active' ? theme.colors.success : 
-    props.status === 'provisional' ? theme.colors.warning :
-    theme.colors.neutral[400]
-  };
-  color: ${theme.colors.neutral[0]};
-`;
-
 const CheckIcon = styled.span`
   color: ${theme.colors.success};
   font-weight: ${theme.fontWeight.bold};
@@ -204,34 +328,14 @@ const CrossIcon = styled.span`
   color: ${theme.colors.neutral[400]};
 `;
 
-const ActionButton = styled(Button)`
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  font-size: ${theme.fontSize.sm};
+const VenueCheckbox = styled.input`
+  margin-right: ${theme.spacing.sm};
 `;
 
-const SelectionSection = styled(Card)`
-  padding: ${theme.spacing.lg};
-  margin-bottom: ${theme.spacing.xl};
-`;
-
-const VenueSelector = styled.div`
+const ComparisonControls = styled.div`
   display: flex;
   gap: ${theme.spacing.md};
-  margin-bottom: ${theme.spacing.lg};
-  flex-wrap: wrap;
-`;
-
-const VenueCard = styled.div<{ selected?: boolean }>`
-  padding: ${theme.spacing.md};
-  border: 2px solid ${props => props.selected ? theme.colors.primary[500] : theme.colors.neutral[300]};
-  border-radius: ${theme.borderRadius.md};
-  background: ${props => props.selected ? theme.colors.primary[50] : theme.colors.neutral[0]};
-  cursor: pointer;
-  min-width: 150px;
-  
-  &:hover {
-    border-color: ${theme.colors.primary[400]};
-  }
+  align-items: center;
 `;
 
 interface VenueSearchPageProps {
@@ -240,257 +344,185 @@ interface VenueSearchPageProps {
 }
 
 export const VenueSearchPage: React.FC<VenueSearchPageProps> = ({ onBack, onVenueSelect }) => {
-  const [searchCriteria, setSearchCriteria] = useState({
-    keyword: '',
-    prefecture: '',
-    city: '',
-    capacityMin: '',
-    capacityMax: '',
-    areaMin: '',
-    areaMax: '',
-    priceMin: '',
-    priceMax: '',
-    equipment: {
-      podium: false,
-      whiteboard: false,
-      screen: false,
-      wirelessMic: false,
-      projector: false,
-    },
-    conditions: {
-      foodAllowed: false,
-      shoesAllowed: false,
-      earthquakeStandard: false,
-      controlRoom: false,
-      parking: false,
-    },
-  });
-
+  const [isDetailedSearchOpen, setIsDetailedSearchOpen] = useState(false);
   const [selectedVenues, setSelectedVenues] = useState<number[]>([]);
   const [showComparisonOnly, setShowComparisonOnly] = useState(false);
+  
+  // クイック絞り込みフィルター
+  const [quickFilters, setQuickFilters] = useState({
+    prefectures: [] as string[],
+    capacity: [] as string[],
+    features: [] as string[],
+    price: [] as string[],
+  });
+  
+  // 詳細検索条件
+  const [detailedSearch, setDetailedSearch] = useState({
+    keyword: '',
+    city: '',
+    areaMin: '',
+    areaMax: '',
+    specificEquipment: '',
+  });
 
-  // モック検索結果データ
-  const searchResults = [
-    {
-      id: 10,
-      name: 'NOCプラザ',
-      status: 'active',
-      address: '新潟県新潟市東区卸新町2-853-3',
-      postalCode: '950-0051',
-      phone: '025-250-1234',
-      fax: '025-250-1235',
-      email: 'info@noc-plaza.jp',
-      website: 'https://www.noc-plaza.jp',
-      capacity: '200名',
-      area: '489㎡',
-      ceilingHeight: '5.5m',
-      price: '30,000円/日',
-      halfDayPrice: '18,000円/半日',
-      hourlyPrice: '5,000円/時間',
-      access: '新潟駅から車15分',
-      nearestStation: 'JR新潟駅',
-      busStop: '卸新町バス停から徒歩3分',
-      parking: '50台（無料）',
-      parkingNotes: '大型バス3台可',
-      equipment: {
-        podium: true,
-        whiteboard: true,
-        screen: true,
-        wirelessMic: true,
-        projector: true,
-        wiredMic: true,
-        pointer: true,
-        speaker: true,
-        internetWired: true,
-        internetWireless: true,
-        dvdPlayer: false,
-        livestream: true,
-      },
-      conditions: {
-        foodAllowed: true,
-        shoesAllowed: false,
-        earthquakeStandard: true,
-        controlRoom: true,
-        handicapAccess: true,
-        elevator: true,
-        airConditioning: true,
-        heating: true,
-      },
-      layout: {
-        theater: '200名',
-        school: '120名',
-        ushape: '60名',
-        square: '80名',
-        party: '150名',
-      },
-      openHours: '9:00～21:00',
-      closedDays: '年末年始',
-      cancelPolicy: '30日前まで無料',
-      paymentMethod: '銀行振込、現金',
-      managementCompany: '株式会社NOCプラザ',
-      notes: '防災訓練実績多数、AED設置',
-    },
-    {
-      id: 11,
-      name: 'ホテルニューキャッスル',
-      status: 'active',
-      address: '新潟県新潟市中央区明石1-2-3',
-      postalCode: '950-0086',
-      phone: '025-222-3456',
-      fax: '025-222-3457',
-      email: 'reserve@new-castle.jp',
-      website: 'https://www.new-castle.jp',
-      capacity: '150名',
-      area: '320㎡',
-      ceilingHeight: '4.2m',
-      price: '25,000円/日',
-      halfDayPrice: '15,000円/半日',
-      hourlyPrice: '4,000円/時間',
-      access: '新潟駅から徒歩10分',
-      nearestStation: 'JR新潟駅',
-      busStop: '明石バス停から徒歩1分',
-      parking: '30台（有料）',
-      parkingNotes: '1日1,000円',
-      equipment: {
-        podium: true,
-        whiteboard: true,
-        screen: true,
-        wirelessMic: false,
-        projector: true,
-        wiredMic: true,
-        pointer: false,
-        speaker: true,
-        internetWired: true,
-        internetWireless: true,
-        dvdPlayer: true,
-        livestream: false,
-      },
-      conditions: {
-        foodAllowed: true,
-        shoesAllowed: true,
-        earthquakeStandard: true,
-        controlRoom: false,
-        handicapAccess: true,
-        elevator: true,
-        airConditioning: true,
-        heating: true,
-      },
-      layout: {
-        theater: '150名',
-        school: '90名',
-        ushape: '45名',
-        square: '60名',
-        party: '120名',
-      },
-      openHours: '8:00～22:00',
-      closedDays: '無休',
-      cancelPolicy: '14日前まで無料',
-      paymentMethod: '銀行振込、クレジットカード、現金',
-      managementCompany: 'ホテルニューキャッスル株式会社',
-      notes: 'ケータリングサービス充実、宿泊施設併設',
-    },
-    {
-      id: 12,
-      name: 'じばさんプラザ',
-      status: 'provisional',
-      address: '新潟県新潟市西区流通センター1-1',
-      postalCode: '950-2123',
-      phone: '025-268-7890',
-      fax: '025-268-7891',
-      email: 'hall@jibasan.jp',
-      website: 'https://www.jibasan.jp',
-      capacity: '100名',
-      area: '250㎡',
-      ceilingHeight: '3.8m',
-      price: '20,000円/日',
-      halfDayPrice: '12,000円/半日',
-      hourlyPrice: '3,500円/時間',
-      access: '新潟駅から車20分',
-      nearestStation: 'JR新潟駅',
-      busStop: '流通センターバス停から徒歩5分',
-      parking: '100台（無料）',
-      parkingNotes: '大型バス5台可',
-      equipment: {
-        podium: false,
-        whiteboard: true,
-        screen: false,
-        wirelessMic: false,
-        projector: false,
-        wiredMic: true,
-        pointer: false,
-        speaker: false,
-        internetWired: false,
-        internetWireless: true,
-        dvdPlayer: false,
-        livestream: false,
-      },
-      conditions: {
-        foodAllowed: false,
-        shoesAllowed: false,
-        earthquakeStandard: true,
-        controlRoom: true,
-        handicapAccess: false,
-        elevator: false,
-        airConditioning: true,
-        heating: true,
-      },
-      layout: {
-        theater: '100名',
-        school: '60名',
-        ushape: '30名',
-        square: '40名',
-        party: '不可',
-      },
-      openHours: '9:00～17:00',
-      closedDays: '土日祝日',
-      cancelPolicy: '7日前まで無料',
-      paymentMethod: '銀行振込のみ',
-      managementCompany: '新潟地場産業振興センター',
-      notes: '展示会場併設、搬入搬出容易',
-    },
+  // フィルターオプション
+  const prefectureOptions = [
+    { label: '東京都', value: 'tokyo', count: 25 },
+    { label: '大阪府', value: 'osaka', count: 18 },
+    { label: '愛知県', value: 'aichi', count: 15 },
+    { label: '新潟県', value: 'niigata', count: 12 },
+    { label: '福岡県', value: 'fukuoka', count: 10 },
   ];
 
-  const handleSearch = () => {
-    alert('検索を実行します');
-  };
+  const capacityOptions = [
+    { label: '～50名', value: '0-50', count: 15 },
+    { label: '51～100名', value: '51-100', count: 20 },
+    { label: '101～200名', value: '101-200', count: 18 },
+    { label: '201～500名', value: '201-500', count: 12 },
+    { label: '501名～', value: '501-', count: 5 },
+  ];
 
-  const handleClear = () => {
-    setSearchCriteria({
-      keyword: '',
-      prefecture: '',
-      city: '',
-      capacityMin: '',
-      capacityMax: '',
-      areaMin: '',
-      areaMax: '',
-      priceMin: '',
-      priceMax: '',
+  const featureOptions = [
+    { label: '駅近（徒歩10分以内）', value: 'near-station', count: 35 },
+    { label: '駐車場あり', value: 'parking', count: 45 },
+    { label: '飲食可', value: 'food-allowed', count: 30 },
+    { label: '土足可', value: 'shoes-allowed', count: 20 },
+    { label: '耐震基準適合', value: 'earthquake', count: 40 },
+    { label: '控室あり', value: 'control-room', count: 25 },
+  ];
+
+  const priceOptions = [
+    { label: '～3万円/日', value: '0-30000', count: 10 },
+    { label: '3～5万円/日', value: '30000-50000', count: 15 },
+    { label: '5～10万円/日', value: '50000-100000', count: 12 },
+    { label: '10万円～/日', value: '100000-', count: 8 },
+  ];
+
+  // JSONデータから会場情報を取得
+  const searchResults = venuesData.venues.map(venue => {
+    // 最初の部屋の情報を使用
+    const mainRoom = venue.rooms[0] || {};
+    // 最初の駅の情報を使用
+    const mainStation = venue.stations[0] || {};
+    
+    // 料金の計算（概算料金を取得）
+    let totalFee = 0;
+    if (venue.fees?.estimated_total_fee) {
+      const fees = Object.values(venue.fees.estimated_total_fee);
+      if (fees.length > 0) {
+        const feeStr = fees[0].toString();
+        // 範囲表記の場合は最大値を取得
+        if (feeStr.includes('-')) {
+          totalFee = parseInt(feeStr.split('-')[1]);
+        } else {
+          totalFee = parseInt(feeStr);
+        }
+      }
+    }
+
+    // アクセス情報の整形
+    let accessInfo = '';
+    if (mainStation.station_name) {
+      accessInfo = `${mainStation.station_name}から`;
+      if (mainStation.walking_time) {
+        accessInfo += `徒歩${mainStation.walking_time}分`;
+      } else if (mainStation.taxi_time) {
+        accessInfo += `車${mainStation.taxi_time}分`;
+      } else if (mainStation.bus_time) {
+        accessInfo += `バス${mainStation.bus_time}分`;
+      }
+    }
+
+    // 駐車場情報の整形
+    let parkingInfo = '';
+    if (venue.facilities?.parking_capacity) {
+      parkingInfo = `${venue.facilities.parking_capacity}台`;
+      if (venue.facilities.parking_fee) {
+        parkingInfo += `（${venue.facilities.parking_fee}）`;
+      }
+    } else if (venue.facilities?.parking_notes) {
+      parkingInfo = venue.facilities.parking_notes;
+    }
+
+    return {
+      id: venue.id,
+      name: venue.venue_name,
+      address: venue.address,
+      capacity: mainRoom.capacity_theater || mainRoom.capacity_school ? 
+        `${mainRoom.capacity_theater || mainRoom.capacity_school}名` : '情報なし',
+      area: mainRoom.floor_area ? `${mainRoom.floor_area}㎡` : '情報なし',
+      price: totalFee ? `${totalFee.toLocaleString()}円` : '要確認',
+      access: accessInfo || '情報なし',
+      parking: parkingInfo || '情報なし',
       equipment: {
-        podium: false,
-        whiteboard: false,
-        screen: false,
-        wirelessMic: false,
-        projector: false,
+        podium: venue.equipment?.podium || false,
+        whiteboard: venue.equipment?.whiteboard || false,
+        screen: venue.equipment?.screen || false,
+        wirelessMic: venue.equipment?.wireless_microphone || false,
+        microphone: venue.equipment?.microphone || false,
+        projector: venue.equipment?.projector || false,
+        wifi: venue.equipment?.wifi || false,
       },
       conditions: {
-        foodAllowed: false,
-        shoesAllowed: false,
-        earthquakeStandard: false,
-        controlRoom: false,
-        parking: false,
+        foodAllowed: venue.facilities?.can_eat_drink || false,
+        shoesAllowed: venue.facilities?.can_wear_shoes || false,
+        earthquakeStandard: venue.facilities?.is_earthquake_resistant || false,
+        controlRoom: venue.rooms?.some(room => room.notes?.includes('控室')) || false,
+        packageReceivable: venue.package_handling?.can_receive_package || false,
       },
+      // 詳細情報も追加
+      venueCode: venue.venue_no,
+      phoneNumber: venue.phone_number,
+      email: venue.email,
+      contactPerson: venue.contact_person,
+      operatingHours: venue.operating_hours,
+      fees: venue.fees,
+      cancellationPolicy: venue.cancellation_policy,
+      reservationConditions: venue.reservation_conditions,
+      notes: venue.tags ? venue.tags.join('、') : '',
+    };
+  });
+
+  const handleQuickFilterChange = (filterType: string, values: string[]) => {
+    setQuickFilters(prev => ({
+      ...prev,
+      [filterType]: values
+    }));
+  };
+
+  const handleRemoveFilter = (filterType: string, value: string) => {
+    setQuickFilters(prev => ({
+      ...prev,
+      [filterType]: prev[filterType as keyof typeof prev].filter(v => v !== value)
+    }));
+  };
+
+  const handleClearAllFilters = () => {
+    setQuickFilters({
+      prefectures: [],
+      capacity: [],
+      features: [],
+      price: [],
+    });
+    setDetailedSearch({
+      keyword: '',
+      city: '',
+      areaMin: '',
+      areaMax: '',
+      specificEquipment: '',
     });
   };
 
-  const toggleVenue = (venueId: number) => {
+  const handleVenueToggle = (venueId: number) => {
     if (selectedVenues.includes(venueId)) {
       setSelectedVenues(selectedVenues.filter(id => id !== venueId));
     } else if (selectedVenues.length < 5) {
       setSelectedVenues([...selectedVenues, venueId]);
-    } else {
-      alert('比較できる会場は最大5件までです');
     }
   };
+
+  const hasActiveFilters = Object.values(quickFilters).some(arr => arr.length > 0) || 
+                          Object.values(detailedSearch).some(val => val !== '');
 
   const filteredResults = showComparisonOnly 
     ? searchResults.filter(venue => selectedVenues.includes(venue.id))
@@ -498,698 +530,505 @@ export const VenueSearchPage: React.FC<VenueSearchPageProps> = ({ onBack, onVenu
 
   return (
     <Container>
-      <SearchPanel>
-        <SearchForm>
-          <SearchGroup style={{ flex: 2 }}>
-            <Label>フリーワード</Label>
-            <Input
-              value={searchCriteria.keyword}
-              onChange={(e) => setSearchCriteria({...searchCriteria, keyword: e.target.value})}
-              placeholder="施設名、住所などで検索"
-            />
-          </SearchGroup>
-          <SearchGroup>
-            <Label>都道府県</Label>
-            <Select
-              value={searchCriteria.prefecture}
-              onChange={(e) => setSearchCriteria({...searchCriteria, prefecture: e.target.value})}
-            >
-              <option value="">選択してください</option>
-              <option value="新潟県">新潟県</option>
-              <option value="東京都">東京都</option>
-              <option value="大阪府">大阪府</option>
-            </Select>
-          </SearchGroup>
-          <SearchGroup>
-            <Label>市区町村</Label>
-            <Input
-              value={searchCriteria.city}
-              onChange={(e) => setSearchCriteria({...searchCriteria, city: e.target.value})}
-              placeholder="例: 新潟市"
-            />
-          </SearchGroup>
-          <Button variant="primary" onClick={handleSearch} style={{alignSelf: 'flex-end'}}>
-            検索
-          </Button>
-          <Button variant="outline" onClick={handleClear} style={{alignSelf: 'flex-end'}}>
-            クリア
-          </Button>
-        </SearchForm>
+      {/* クイック絞り込み */}
+      <QuickFilterSection>
+        <QuickFilterHeader>
+          <Text size="lg" weight="bold">クイック絞り込み</Text>
+          {hasActiveFilters && (
+            <Button variant="text" size="small" onClick={handleClearAllFilters}>
+              すべてクリア
+            </Button>
+          )}
+        </QuickFilterHeader>
         
-        <SearchForm style={{marginTop: theme.spacing.md}}>
-          <SearchGroup>
-            <Label>収容人数</Label>
-            <div style={{display: 'flex', gap: theme.spacing.xs, alignItems: 'center'}}>
-              <Input
-                type="number"
-                value={searchCriteria.capacityMin}
-                onChange={(e) => setSearchCriteria({...searchCriteria, capacityMin: e.target.value})}
-                placeholder="最小"
-                style={{width: '100px'}}
-              />
-              <span>〜</span>
-              <Input
-                type="number"
-                value={searchCriteria.capacityMax}
-                onChange={(e) => setSearchCriteria({...searchCriteria, capacityMax: e.target.value})}
-                placeholder="最大"
-                style={{width: '100px'}}
-              />
-              <span>名</span>
-            </div>
-          </SearchGroup>
-          <SearchGroup>
-            <Label>面積（㎡）</Label>
-            <div style={{display: 'flex', gap: theme.spacing.xs, alignItems: 'center'}}>
-              <Input
-                type="number"
-                value={searchCriteria.areaMin}
-                onChange={(e) => setSearchCriteria({...searchCriteria, areaMin: e.target.value})}
-                placeholder="最小"
-                style={{width: '100px'}}
-              />
-              <span>〜</span>
-              <Input
-                type="number"
-                value={searchCriteria.areaMax}
-                onChange={(e) => setSearchCriteria({...searchCriteria, areaMax: e.target.value})}
-                placeholder="最大"
-                style={{width: '100px'}}
-              />
-              <span>㎡</span>
-            </div>
-          </SearchGroup>
-          <SearchGroup>
-            <Label>1日料金（円）</Label>
-            <div style={{display: 'flex', gap: theme.spacing.xs, alignItems: 'center'}}>
-              <Input
-                type="number"
-                value={searchCriteria.priceMin}
-                onChange={(e) => setSearchCriteria({...searchCriteria, priceMin: e.target.value})}
-                placeholder="最小"
-                style={{width: '120px'}}
-              />
-              <span>〜</span>
-              <Input
-                type="number"
-                value={searchCriteria.priceMax}
-                onChange={(e) => setSearchCriteria({...searchCriteria, priceMax: e.target.value})}
-                placeholder="最大"
-                style={{width: '120px'}}
-              />
-              <span>円</span>
-            </div>
-          </SearchGroup>
-        </SearchForm>
-        
-        <FilterSection>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.conditions.foodAllowed}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                conditions: {...searchCriteria.conditions, foodAllowed: e.target.checked}
-              })}
-            />
-            飲食可
-          </CheckboxItem>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.conditions.shoesAllowed}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                conditions: {...searchCriteria.conditions, shoesAllowed: e.target.checked}
-              })}
-            />
-            土足可
-          </CheckboxItem>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.conditions.earthquakeStandard}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                conditions: {...searchCriteria.conditions, earthquakeStandard: e.target.checked}
-              })}
-            />
-            耐震基準適合
-          </CheckboxItem>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.conditions.controlRoom}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                conditions: {...searchCriteria.conditions, controlRoom: e.target.checked}
-              })}
-            />
-            控室あり
-          </CheckboxItem>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.conditions.parking}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                conditions: {...searchCriteria.conditions, parking: e.target.checked}
-              })}
-            />
-            駐車場あり
-          </CheckboxItem>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.equipment.projector}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                equipment: {...searchCriteria.equipment, projector: e.target.checked}
-              })}
-            />
-            プロジェクター
-          </CheckboxItem>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.equipment.screen}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                equipment: {...searchCriteria.equipment, screen: e.target.checked}
-              })}
-            />
-            スクリーン
-          </CheckboxItem>
-          <CheckboxItem>
-            <input
-              type="checkbox"
-              checked={searchCriteria.equipment.wirelessMic}
-              onChange={(e) => setSearchCriteria({
-                ...searchCriteria,
-                equipment: {...searchCriteria.equipment, wirelessMic: e.target.checked}
-              })}
-            />
-            ワイヤレスマイク
-          </CheckboxItem>
-        </FilterSection>
-      </SearchPanel>
+        <QuickFilterGroups>
+          <FilterGroup
+            title="都道府県"
+            options={prefectureOptions}
+            selectedValues={quickFilters.prefectures}
+            onChange={(values) => handleQuickFilterChange('prefectures', values)}
+          />
+          
+          <FilterGroup
+            title="収容人数"
+            options={capacityOptions}
+            selectedValues={quickFilters.capacity}
+            onChange={(values) => handleQuickFilterChange('capacity', values)}
+          />
+          
+          <FilterGroup
+            title="設備・条件"
+            options={featureOptions}
+            selectedValues={quickFilters.features}
+            onChange={(values) => handleQuickFilterChange('features', values)}
+          />
+          
+          <FilterGroup
+            title="料金帯"
+            options={priceOptions}
+            selectedValues={quickFilters.price}
+            onChange={(values) => handleQuickFilterChange('price', values)}
+          />
+        </QuickFilterGroups>
+      </QuickFilterSection>
 
+      {/* 詳細検索（アコーディオン） */}
+      <DetailedSearchSection>
+        <AccordionHeader 
+          isOpen={isDetailedSearchOpen}
+          onClick={() => setIsDetailedSearchOpen(!isDetailedSearchOpen)}
+        >
+          <Text size="md" weight="semibold">詳細検索</Text>
+        </AccordionHeader>
+        
+        <AccordionContent isOpen={isDetailedSearchOpen}>
+          <DetailedSearchForm>
+            <FormGroup>
+              <Label>フリーワード</Label>
+              <Input
+                placeholder="施設名、住所、備考など"
+                value={detailedSearch.keyword}
+                onChange={(e) => setDetailedSearch(prev => ({ ...prev, keyword: e.target.value }))}
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label>市区町村</Label>
+              <Input
+                placeholder="例：新潟市中央区"
+                value={detailedSearch.city}
+                onChange={(e) => setDetailedSearch(prev => ({ ...prev, city: e.target.value }))}
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <Label>面積（㎡）</Label>
+              <RangeInputGroup>
+                <RangeInput
+                  type="number"
+                  placeholder="最小"
+                  value={detailedSearch.areaMin}
+                  onChange={(e) => setDetailedSearch(prev => ({ ...prev, areaMin: e.target.value }))}
+                />
+                <span>～</span>
+                <RangeInput
+                  type="number"
+                  placeholder="最大"
+                  value={detailedSearch.areaMax}
+                  onChange={(e) => setDetailedSearch(prev => ({ ...prev, areaMax: e.target.value }))}
+                />
+              </RangeInputGroup>
+            </FormGroup>
+            
+            <FormGroup>
+              <Label>特定の設備</Label>
+              <Input
+                placeholder="例：ライブ配信機器"
+                value={detailedSearch.specificEquipment}
+                onChange={(e) => setDetailedSearch(prev => ({ ...prev, specificEquipment: e.target.value }))}
+              />
+            </FormGroup>
+            
+            <FormGroup style={{ gridColumn: 'span 2', display: 'flex', alignItems: 'flex-end' }}>
+              <Button variant="primary" style={{ width: '200px' }}>
+                詳細検索を実行
+              </Button>
+            </FormGroup>
+          </DetailedSearchForm>
+        </AccordionContent>
+      </DetailedSearchSection>
+
+      {/* 選択中のフィルター表示 */}
+      {hasActiveFilters && (
+        <ActiveFiltersSection>
+          <Text size="sm" weight="semibold" style={{ marginRight: theme.spacing.md }}>
+            選択中のフィルター：
+          </Text>
+          {Object.entries(quickFilters).map(([filterType, values]) =>
+            values.map(value => {
+              const option = 
+                filterType === 'prefectures' ? prefectureOptions.find(o => o.value === value) :
+                filterType === 'capacity' ? capacityOptions.find(o => o.value === value) :
+                filterType === 'features' ? featureOptions.find(o => o.value === value) :
+                priceOptions.find(o => o.value === value);
+              
+              return option ? (
+                <FilterTag key={`${filterType}-${value}`}>
+                  {option.label}
+                  <RemoveTagButton onClick={() => handleRemoveFilter(filterType, value)}>
+                    ✕
+                  </RemoveTagButton>
+                </FilterTag>
+              ) : null;
+            })
+          )}
+          {detailedSearch.keyword && (
+            <FilterTag>
+              キーワード: {detailedSearch.keyword}
+              <RemoveTagButton onClick={() => setDetailedSearch(prev => ({ ...prev, keyword: '' }))}>
+                ✕
+              </RemoveTagButton>
+            </FilterTag>
+          )}
+        </ActiveFiltersSection>
+      )}
+
+      {/* 検索結果 */}
       <ResultsSection>
         <ResultsHeader>
-          <Text size="lg" weight="semibold">
-            検索結果: {searchResults.length}件
+          <Text size="lg" weight="bold">
+            検索結果: {filteredResults.length}件
           </Text>
         </ResultsHeader>
 
-        {searchResults.length > 0 && (
-          <SelectionSection>
-            <Text size="lg" weight="semibold" style={{ marginBottom: theme.spacing.md }}>
-              比較する会場を選択（最大5件）
+        {/* 会場選択エリア */}
+        <VenueSelectionArea>
+          <VenueSelectionHeader>
+            <Text size="md" weight="semibold">
+              会場を選択して比較 (最大5件)
             </Text>
-            <VenueSelector>
-              {filteredResults.map(venue => (
-                <VenueCard
-                  key={venue.id}
-                  selected={selectedVenues.includes(venue.id)}
-                  onClick={() => toggleVenue(venue.id)}
-                >
-                  <Text size="sm" weight={selectedVenues.includes(venue.id) ? 'semibold' : 'regular'}>
-                    {venue.name}
-                  </Text>
-                </VenueCard>
-              ))}
-            </VenueSelector>
-            <div style={{ display: 'flex', gap: theme.spacing.md }}>
-              <Button 
-                variant="primary"
+            <ComparisonControls>
+              <Text size="sm">
+                選択中: {selectedVenues.length}/5件
+              </Text>
+              <Button
+                variant={showComparisonOnly ? 'primary' : 'outline'}
+                size="small"
+                onClick={() => setShowComparisonOnly(!showComparisonOnly)}
                 disabled={selectedVenues.length === 0}
-                onClick={() => setShowComparisonOnly(true)}
               >
-                選択した会場のみ表示
+                選択した会場のみ比較表示
               </Button>
-              {showComparisonOnly && (
-                <Button 
-                  variant="outline"
-                  onClick={() => setShowComparisonOnly(false)}
-                >
-                  全て表示
-                </Button>
-              )}
-              {selectedVenues.length > 0 && (
-                <Button 
-                  variant="outline"
-                  onClick={() => setSelectedVenues([])}
-                >
-                  選択をクリア
-                </Button>
-              )}
-            </div>
-          </SelectionSection>
-        )}
+            </ComparisonControls>
+          </VenueSelectionHeader>
+          
+          <VenueCardGrid>
+            {searchResults.map(venue => (
+              <VenueCard 
+                key={venue.id}
+                selected={selectedVenues.includes(venue.id)}
+                onClick={() => handleVenueToggle(venue.id)}
+              >
+                <VenueCardHeader>
+                  <input
+                    type="checkbox"
+                    checked={selectedVenues.includes(venue.id)}
+                    onChange={() => handleVenueToggle(venue.id)}
+                    disabled={!selectedVenues.includes(venue.id) && selectedVenues.length >= 5}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <Text weight="semibold">{venue.name}</Text>
+                </VenueCardHeader>
+                <VenueCardBody>
+                  <div>{venue.address}</div>
+                  <div>収容人数: {venue.capacity}</div>
+                  <div>料金: {venue.price}</div>
+                </VenueCardBody>
+              </VenueCard>
+            ))}
+          </VenueCardGrid>
+        </VenueSelectionArea>
 
         <ComparisonTable>
           <Table>
             <Thead>
               <Tr>
-                <Th>項目</Th>
+                <ItemTh>項目</ItemTh>
                 {filteredResults.map(venue => (
-                  <VenueNameTh key={venue.id} onClick={() => onVenueSelect && onVenueSelect(venue.id)}>
-                    {venue.name}
+                  <VenueNameTh key={venue.id}>
+                    <span 
+                      onClick={() => onVenueSelect && onVenueSelect(venue.id)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Text size="sm" weight="semibold" style={{ color: theme.colors.primary[600] }}>
+                        {venue.name}
+                      </Text>
+                    </span>
                   </VenueNameTh>
                 ))}
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>ステータス</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    <StatusBadge status={venue.status}>
-                      {venue.status === 'active' ? '利用可能' : '仮予約'}
-                    </StatusBadge>
-                  </Td>
-                ))}
-              </Tr>
-              
               <CategoryRow>
                 <CategoryTd colSpan={filteredResults.length + 1}>基本情報</CategoryTd>
               </CategoryRow>
-              
               <Tr>
-                <Td>住所</Td>
+                <ItemTd>住所</ItemTd>
                 {filteredResults.map(venue => (
                   <Td key={venue.id}>{venue.address}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>郵便番号</Td>
+                <ItemTd>会場コード</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.postalCode}</Td>
+                  <Td key={venue.id}>{venue.venueCode || '-'}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>電話番号</Td>
+                <ItemTd>電話番号</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.phone}</Td>
+                  <Td key={venue.id}>{venue.phoneNumber || '-'}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>FAX</Td>
+                <ItemTd>メールアドレス</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.fax}</Td>
+                  <Td key={venue.id}>{venue.email || '-'}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>メール</Td>
+                <ItemTd>担当者名</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.email}</Td>
+                  <Td key={venue.id}>{venue.contactPerson || '-'}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>ウェブサイト</Td>
+                <ItemTd>収容人数（メイン）</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    <a href={venue.website} target="_blank" rel="noopener noreferrer" style={{color: theme.colors.primary[600]}}>
-                      {venue.website}
-                    </a>
-                  </Td>
+                  <Td key={venue.id}>{venue.capacity}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>管理会社</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.managementCompany}</Td>
-                ))}
-              </Tr>
-              
-              <CategoryRow>
-                <CategoryTd colSpan={filteredResults.length + 1}>施設仕様</CategoryTd>
-              </CategoryRow>
-              
-              <Tr>
-                <Td>収容人数</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    <Text weight="semibold">{venue.capacity}</Text>
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>面積</Td>
+                <ItemTd>面積（メイン）</ItemTd>
                 {filteredResults.map(venue => (
                   <Td key={venue.id}>{venue.area}</Td>
                 ))}
               </Tr>
+              
+              <CategoryRow>
+                <CategoryTd colSpan={filteredResults.length + 1}>料金情報</CategoryTd>
+              </CategoryRow>
               <Tr>
-                <Td>天井高</Td>
+                <ItemTd>基本料金（2.5日間）</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.ceilingHeight}</Td>
+                  <Td key={venue.id}>{venue.price}</Td>
                 ))}
               </Tr>
               
               <CategoryRow>
-                <CategoryTd colSpan={filteredResults.length + 1}>レイアウト対応人数</CategoryTd>
+                <CategoryTd colSpan={filteredResults.length + 1}>アクセス・駐車場</CategoryTd>
               </CategoryRow>
-              
               <Tr>
-                <Td>シアター形式</Td>
+                <ItemTd>最寄り駅</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.layout.theater}</Td>
+                  <Td key={venue.id}>{venue.access}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>スクール形式</Td>
+                <ItemTd>駐車場台数</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.layout.school}</Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>ロの字形式</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.layout.ushape}</Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>島型形式</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.layout.square}</Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>パーティー形式</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.layout.party}</Td>
+                  <Td key={venue.id}>{venue.parking}</Td>
                 ))}
               </Tr>
               
               <CategoryRow>
-                <CategoryTd colSpan={filteredResults.length + 1}>料金</CategoryTd>
+                <CategoryTd colSpan={filteredResults.length + 1}>設備（基本）</CategoryTd>
               </CategoryRow>
-              
               <Tr>
-                <Td>1日料金</Td>
+                <ItemTd>演台</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    <Text color={theme.colors.primary[600]} weight="semibold">
-                      {venue.price}
-                    </Text>
-                  </Td>
+                  <Td key={venue.id}>{venue.equipment.podium ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>半日料金</Td>
+                <ItemTd>ホワイトボード</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.halfDayPrice}</Td>
+                  <Td key={venue.id}>{venue.equipment.whiteboard ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>時間料金</Td>
+                <ItemTd>スクリーン</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.hourlyPrice}</Td>
+                  <Td key={venue.id}>{venue.equipment.screen ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>支払方法</Td>
+                <ItemTd>プロジェクター</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.paymentMethod}</Td>
+                  <Td key={venue.id}>{venue.equipment.projector ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>キャンセルポリシー</Td>
+                <ItemTd>ワイヤレスマイク</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.cancelPolicy}</Td>
+                  <Td key={venue.id}>{venue.equipment.wirelessMic ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>有線マイク</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}>{venue.equipment.microphone ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>ポインター</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}>要確認</Td>
                 ))}
               </Tr>
               
               <CategoryRow>
-                <CategoryTd colSpan={filteredResults.length + 1}>設備</CategoryTd>
+                <CategoryTd colSpan={filteredResults.length + 1}>設備（音響・映像）</CategoryTd>
               </CategoryRow>
+              <Tr>
+                <ItemTd>録音機器</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}><CrossIcon>－</CrossIcon></Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>ライブ配信機器</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}><CheckIcon>○</CheckIcon></Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>同時通訳ブース</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}><CrossIcon>－</CrossIcon></Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>音響設備</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}><CheckIcon>○</CheckIcon></Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>照明調整</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}><CheckIcon>○</CheckIcon></Td>
+                ))}
+              </Tr>
               
+              <CategoryRow>
+                <CategoryTd colSpan={filteredResults.length + 1}>設備（その他）</CategoryTd>
+              </CategoryRow>
               <Tr>
-                <Td>演台</Td>
+                <ItemTd>空調設備</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.podium ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}><CheckIcon>○</CheckIcon></Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>ホワイトボード</Td>
+                <ItemTd>Wi-Fi</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.whiteboard ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}>{venue.equipment.wifi ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>スクリーン</Td>
+                <ItemTd>プロジェクター台</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.screen ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}>要確認</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>ワイヤレスマイク</Td>
+                <ItemTd>控室</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.wirelessMic ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>プロジェクター</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.projector ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>有線マイク</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.wiredMic ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>レーザーポインター</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.pointer ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>スピーカー</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.speaker ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>有線インターネット</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.internetWired ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>Wi-Fi</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.internetWireless ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>DVDプレーヤー</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.dvdPlayer ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>ライブ配信対応</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.equipment.livestream ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}>{venue.conditions.controlRoom ? <CheckIcon>○（2室）</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               
               <CategoryRow>
                 <CategoryTd colSpan={filteredResults.length + 1}>利用条件</CategoryTd>
               </CategoryRow>
-              
               <Tr>
-                <Td>飲食可</Td>
+                <ItemTd>飲食可</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.foodAllowed ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}>{venue.conditions.foodAllowed ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>土足可</Td>
+                <ItemTd>土足可</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.shoesAllowed ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}>{venue.conditions.shoesAllowed ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>耐震基準適合</Td>
+                <ItemTd>耐震基準適合</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.earthquakeStandard ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}>{venue.conditions.earthquakeStandard ? <CheckIcon>○（新耐震）</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               <Tr>
-                <Td>控室あり</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.controlRoom ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
+                <ItemTd>営業時間</ItemTd>
+                {filteredResults.map(venue => {
+                  const hours = venue.operatingHours;
+                  const display = hours?.weekday_open && hours?.weekday_close ?
+                    `${hours.weekday_open}～${hours.weekday_close}` : '要確認';
+                  return <Td key={venue.id}>{display}</Td>;
+                })}
               </Tr>
               <Tr>
-                <Td>バリアフリー対応</Td>
+                <ItemTd>荷物受取可</ItemTd>
                 {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.handicapAccess ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>エレベーター</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.elevator ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>冷房</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.airConditioning ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>暖房</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>
-                    {venue.conditions.heating ? 
-                      <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                  </Td>
+                  <Td key={venue.id}>{venue.conditions.packageReceivable ? <CheckIcon>○</CheckIcon> : <CrossIcon>－</CrossIcon>}</Td>
                 ))}
               </Tr>
               
               <CategoryRow>
-                <CategoryTd colSpan={filteredResults.length + 1}>アクセス</CategoryTd>
+                <CategoryTd colSpan={filteredResults.length + 1}>予約・キャンセル条件</CategoryTd>
               </CategoryRow>
-              
               <Tr>
-                <Td>最寄り駅</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.nearestStation}</Td>
-                ))}
+                <ItemTd>予約方法</ItemTd>
+                {filteredResults.map(venue => {
+                  const method = venue.reservationConditions?.reservation_method || '要確認';
+                  return <Td key={venue.id}>{method}</Td>;
+                })}
               </Tr>
               <Tr>
-                <Td>駅からのアクセス</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.access}</Td>
-                ))}
+                <ItemTd>支払い期限</ItemTd>
+                {filteredResults.map(venue => {
+                  const deadline = venue.reservationConditions?.payment_deadline || '要確認';
+                  return <Td key={venue.id}>{deadline}</Td>;
+                })}
               </Tr>
               <Tr>
-                <Td>バス停</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.busStop}</Td>
-                ))}
+                <ItemTd>支払い方法</ItemTd>
+                {filteredResults.map(venue => {
+                  const method = venue.reservationConditions?.payment_method || '要確認';
+                  return <Td key={venue.id}>{method}</Td>;
+                })}
               </Tr>
               <Tr>
-                <Td>駐車場</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.parking}</Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>駐車場備考</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.parkingNotes}</Td>
-                ))}
+                <ItemTd>キャンセルポリシー</ItemTd>
+                {filteredResults.map(venue => {
+                  const policy = venue.cancellationPolicy?.notes || '要確認';
+                  return <Td key={venue.id}>{policy}</Td>;
+                })}
               </Tr>
               
               <CategoryRow>
-                <CategoryTd colSpan={filteredResults.length + 1}>営業情報</CategoryTd>
+                <CategoryTd colSpan={filteredResults.length + 1}>その他情報</CategoryTd>
               </CategoryRow>
-              
               <Tr>
-                <Td>営業時間</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.openHours}</Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>休館日</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.closedDays}</Td>
-                ))}
-              </Tr>
-              <Tr>
-                <Td>備考</Td>
-                {filteredResults.map(venue => (
-                  <Td key={venue.id}>{venue.notes}</Td>
-                ))}
-              </Tr>
-              
-              <CategoryRow>
-                <CategoryTd colSpan={filteredResults.length + 1}>アクション</CategoryTd>
-              </CategoryRow>
-              
-              <Tr>
-                <Td>操作</Td>
+                <ItemTd>公式サイト</ItemTd>
                 {filteredResults.map(venue => (
                   <Td key={venue.id}>
-                    <div style={{ display: 'flex', gap: theme.spacing.xs }}>
-                      <ActionButton 
-                        variant="primary" 
-                        size="small"
-                        onClick={() => onVenueSelect && onVenueSelect(venue.id)}
-                      >
-                        詳細
-                      </ActionButton>
-                      <ActionButton variant="outline" size="small">
-                        編集
-                      </ActionButton>
-                    </div>
+                    <a href="#" style={{ color: theme.colors.primary[600] }}>サイトを見る</a>
                   </Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>予約サイト</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}>
+                    <a href="#" style={{ color: theme.colors.primary[600] }}>予約ページ</a>
+                  </Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>Googleマップ</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}>
+                    <a href="#" style={{ color: theme.colors.primary[600] }}>地図を見る</a>
+                  </Td>
+                ))}
+              </Tr>
+              <Tr>
+                <ItemTd>備考</ItemTd>
+                {filteredResults.map(venue => (
+                  <Td key={venue.id}>{venue.notes || '-'}</Td>
                 ))}
               </Tr>
             </Tbody>

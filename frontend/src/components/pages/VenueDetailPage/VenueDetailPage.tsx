@@ -100,14 +100,23 @@ export const VenueDetailPage: React.FC<VenueDetailPageProps> = ({
       }
     ],
     // 設備情報（venue_facilitiesテーブル）
-    facilities: [
-      { facility_type_id: 1, quantity: 1, notes: "200インチ" }, // スクリーン
-      { facility_type_id: 2, quantity: 1, notes: null }, // プロジェクター
-      { facility_type_id: 3, quantity: 5, is_wireless: true }, // ワイヤレスマイク
-      { facility_type_id: 4, quantity: 10, is_wireless: false }, // 有線マイク
-      { facility_type_id: 5, quantity: 2, notes: null }, // ホワイトボード
-      { facility_type_id: 6, quantity: 1, notes: null } // 演台
-    ],
+    facilities: {
+      screen: { status: 'yes', notes: '200インチ・高解像度対応' },
+      projector: { status: 'yes', notes: 'HDMI/VGA対応・明るい場所でも鮮明' },
+      mic_wireless: { status: 'yes', notes: 'ワイヤレス5本・充電式' },
+      mic_wired: { status: 'yes', notes: '有線10本・長ケーブル対応' },
+      whiteboard: { status: 'yes', notes: '大型2台・マグネット対応' },
+      podium: { status: 'yes', notes: '高さ調整可能・照明付き' },
+      pointer: { status: 'unknown', notes: '要確認' },
+      recording_equipment: { status: 'no', notes: '外部持ち込み可' },
+      livestream_equipment: { status: 'yes', notes: 'YouTube/Zoom配信対応' },
+      interpreter_booth: { status: 'no', notes: '' },
+      sound_system: { status: 'yes', notes: '大型スピーカー4台設置' },
+      lighting_control: { status: 'yes', notes: '調光可能・プリセット有り' },
+      air_conditioning: { status: 'yes', notes: '個別温度調整可能' },
+      wifi: { status: 'yes', notes: '高速光回線・同時接続200台可' },
+      projector_stand: { status: 'unknown', notes: '' }
+    },
     // 料金情報（venue_feesテーブル）
     fees: {
       main_venue_fee: 30000,

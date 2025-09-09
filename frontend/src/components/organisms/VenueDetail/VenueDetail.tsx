@@ -476,21 +476,47 @@ export const VenueDetail: React.FC<VenueDetailProps> = ({ venue, onBack, onEdit 
               </Section>
             )}
 
-            {venue.facilities && venue.facilities.length > 0 && (
+            {venue.facilities && Object.keys(venue.facilities).length > 0 && (
               <Section>
                 <SectionTitle as="h2" size="lg" weight="semibold">
                   設備
                 </SectionTitle>
                 <EquipmentGrid>
-                  {venue.facilities.map((facility: any, index: number) => (
-                    <EquipmentItem key={index} available={facility.quantity > 0}>
-                      {facility.quantity > 0 ? <CheckIcon>✓</CheckIcon> : <CrossIcon>✗</CrossIcon>}
-                      {FACILITY_TYPES[facility.facility_type_id] || `設備${facility.facility_type_id}`}
-                      {facility.quantity > 1 && ` (${facility.quantity})`}
-                      {facility.is_wireless !== undefined && facility.is_wireless && ' (ワイヤレス)'}
-                      {facility.notes && ` - ${facility.notes}`}
-                    </EquipmentItem>
-                  ))}
+                  {Object.entries(venue.facilities).map(([key, facility]: [string, any]) => {
+                    const facilityNames: { [key: string]: string } = {
+                      screen: 'スクリーン',
+                      projector: 'プロジェクター',
+                      mic_wireless: 'ワイヤレスマイク',
+                      mic_wired: '有線マイク',
+                      whiteboard: 'ホワイトボード',
+                      podium: '演台',
+                      pointer: 'レーザーポインター',
+                      recording_equipment: '録画機器',
+                      livestream_equipment: 'ライブ配信機器',
+                      interpreter_booth: '同時通訳ブース',
+                      sound_system: '音響システム',
+                      lighting_control: '照明調整',
+                      air_conditioning: '空調設備',
+                      wifi: 'Wi-Fi',
+                      projector_stand: 'プロジェクタースタンド'
+                    };
+                    
+                    const statusIcon = facility.status === 'yes' ? '✓' : 
+                                      facility.status === 'no' ? '✗' : '?';
+                    const statusColor = facility.status === 'yes' ? theme.colors.success : 
+                                       facility.status === 'no' ? theme.colors.error : 
+                                       theme.colors.neutral[400];
+                    
+                    return (
+                      <EquipmentItem key={key} available={facility.status === 'yes'}>
+                        <span style={{ color: statusColor, fontWeight: 'bold', marginRight: '8px' }}>
+                          {statusIcon}
+                        </span>
+                        {facilityNames[key] || key}
+                        {facility.notes && ` - ${facility.notes}`}
+                      </EquipmentItem>
+                    );
+                  })}
                 </EquipmentGrid>
               </Section>
             )}

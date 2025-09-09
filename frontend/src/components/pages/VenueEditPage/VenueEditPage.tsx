@@ -245,6 +245,63 @@ const ChangeHistory = styled.div`
   margin-top: ${theme.spacing.md};
 `;
 
+const EquipmentGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: ${theme.spacing.lg};
+`;
+
+const EquipmentItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.sm};
+  padding: ${theme.spacing.md};
+  background-color: ${theme.colors.neutral[50]};
+  border-radius: ${theme.borderRadius.md};
+`;
+
+const EquipmentLabel = styled.label`
+  font-weight: 600;
+  color: ${theme.colors.neutral[700]};
+  font-size: ${theme.fontSize.sm};
+`;
+
+const TriStateSelector = styled.div`
+  display: flex;
+  gap: ${theme.spacing.xs};
+`;
+
+const TriStateOption = styled.button<{ selected: boolean }>`
+  flex: 1;
+  padding: ${theme.spacing.sm};
+  border: 2px solid ${props => props.selected ? theme.colors.primary[500] : theme.colors.neutral[300]};
+  background-color: ${props => props.selected ? theme.colors.primary[50] : theme.colors.neutral[0]};
+  color: ${props => props.selected ? theme.colors.primary[700] : theme.colors.neutral[600]};
+  border-radius: ${theme.borderRadius.sm};
+  font-size: ${theme.fontSize.sm};
+  font-weight: ${props => props.selected ? '600' : '400'};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${theme.colors.primary[400]};
+    background-color: ${props => props.selected ? theme.colors.primary[100] : theme.colors.neutral[50]};
+  }
+`;
+
+const NotesInput = styled.input`
+  padding: ${theme.spacing.sm};
+  border: 1px solid ${theme.colors.neutral[300]};
+  border-radius: ${theme.borderRadius.sm};
+  font-size: ${theme.fontSize.sm};
+  
+  &:focus {
+    outline: none;
+    border-color: ${theme.colors.primary[500]};
+    box-shadow: 0 0 0 3px ${theme.colors.primary[100]};
+  }
+`;
+
 interface VenueEditPageProps {
   venueId?: number;
   onBack?: () => void;
@@ -343,13 +400,21 @@ export const VenueEditPage: React.FC<VenueEditPageProps> = ({ venueId, onBack })
     
     // 設備情報
     facilities: {
-      podium: { quantity: 1, notes: '' },
-      whiteboard: { quantity: 3, notes: '' },
-      screen: { quantity: 2, size: '150インチ', notes: '' },
-      mic_wireless: { quantity: 4, is_wireless: true, notes: '' },
-      mic_wired: { quantity: 2, is_wireless: false, notes: '' },
-      projector_stand: { quantity: 2, notes: '' },
-      projector: { quantity: 2, notes: 'HDMI対応' },
+      podium: { status: 'yes', notes: '高さ調整可能' },
+      whiteboard: { status: 'yes', notes: '3台利用可能' },
+      screen: { status: 'yes', notes: '150インチ×2台' },
+      mic_wireless: { status: 'yes', notes: 'ワイヤレス4本' },
+      mic_wired: { status: 'yes', notes: '有線2本' },
+      projector: { status: 'yes', notes: 'HDMI対応・2台' },
+      projector_stand: { status: 'no', notes: '' },
+      pointer: { status: 'unknown', notes: '要確認' },
+      recording_equipment: { status: 'yes', notes: '録画機器あり' },
+      livestream_equipment: { status: 'no', notes: '' },
+      interpreter_booth: { status: 'unknown', notes: '' },
+      sound_system: { status: 'yes', notes: '大型スピーカー完備' },
+      lighting_control: { status: 'yes', notes: '調光可能' },
+      air_conditioning: { status: 'yes', notes: '個別空調' },
+      wifi: { status: 'yes', notes: '高速WiFi完備' },
     },
     
     // 料金情報
@@ -945,108 +1010,696 @@ export const VenueEditPage: React.FC<VenueEditPageProps> = ({ venueId, onBack })
         {/* 設備情報 */}
         <Section>
           <SectionTitle>設備情報</SectionTitle>
-          <FormGrid>
-            <FormGroup>
-              <Label>演台</Label>
-              <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-                <Input 
-                  type="number" 
-                  value={formData.facilities.podium.quantity}
-                  style={{ width: '100px' }}
-                  placeholder="数量"
-                />
-                <Input 
-                  value={formData.facilities.podium.notes}
-                  placeholder="備考"
-                />
-              </div>
-            </FormGroup>
+          <EquipmentGrid>
+            <EquipmentItem>
+              <EquipmentLabel>演台</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.podium.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      podium: { ...formData.facilities.podium, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.podium.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      podium: { ...formData.facilities.podium, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.podium.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      podium: { ...formData.facilities.podium, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.podium.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    podium: { ...formData.facilities.podium, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：高さ調整可能）"
+              />
+            </EquipmentItem>
             
-            <FormGroup>
-              <Label>ホワイトボード</Label>
-              <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-                <Input 
-                  type="number" 
-                  value={formData.facilities.whiteboard.quantity}
-                  style={{ width: '100px' }}
-                  placeholder="数量"
-                />
-                <Input 
-                  value={formData.facilities.whiteboard.notes}
-                  placeholder="備考"
-                />
-              </div>
-            </FormGroup>
+            <EquipmentItem>
+              <EquipmentLabel>ワイヤレスマイク</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.mic_wireless.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      mic_wireless: { ...formData.facilities.mic_wireless, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.mic_wireless.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      mic_wireless: { ...formData.facilities.mic_wireless, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.mic_wireless.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      mic_wireless: { ...formData.facilities.mic_wireless, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.mic_wireless.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    mic_wireless: { ...formData.facilities.mic_wireless, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：ワイヤレス4本）"
+              />
+            </EquipmentItem>
             
-            <FormGroup>
-              <Label>スクリーン</Label>
-              <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-                <Input 
-                  type="number" 
-                  value={formData.facilities.screen.quantity}
-                  style={{ width: '100px' }}
-                  placeholder="数量"
-                />
-                <Input 
-                  value={formData.facilities.screen.size}
-                  style={{ width: '150px' }}
-                  placeholder="サイズ"
-                />
-                <Input 
-                  value={formData.facilities.screen.notes}
-                  placeholder="備考"
-                />
-              </div>
-            </FormGroup>
-            
-            <FormGroup>
-              <Label>ワイヤレスマイク</Label>
-              <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-                <Input 
-                  type="number" 
-                  value={formData.facilities.mic_wireless.quantity}
-                  style={{ width: '100px' }}
-                  placeholder="数量"
-                />
-                <Input 
-                  value={formData.facilities.mic_wireless.notes}
-                  placeholder="備考"
-                />
-              </div>
-            </FormGroup>
-            
-            <FormGroup>
-              <Label>有線マイク</Label>
-              <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-                <Input 
-                  type="number" 
-                  value={formData.facilities.mic_wired.quantity}
-                  style={{ width: '100px' }}
-                  placeholder="数量"
-                />
-                <Input 
-                  value={formData.facilities.mic_wired.notes}
-                  placeholder="備考"
-                />
-              </div>
-            </FormGroup>
-            
-            <FormGroup>
-              <Label>プロジェクター</Label>
-              <div style={{ display: 'flex', gap: theme.spacing.sm }}>
-                <Input 
-                  type="number" 
-                  value={formData.facilities.projector.quantity}
-                  style={{ width: '100px' }}
-                  placeholder="数量"
-                />
-                <Input 
-                  value={formData.facilities.projector.notes}
-                  placeholder="備考"
-                />
-              </div>
-            </FormGroup>
-          </FormGrid>
+            <EquipmentItem>
+              <EquipmentLabel>有線マイク</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.mic_wired.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      mic_wired: { ...formData.facilities.mic_wired, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.mic_wired.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      mic_wired: { ...formData.facilities.mic_wired, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.mic_wired.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      mic_wired: { ...formData.facilities.mic_wired, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.mic_wired.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    mic_wired: { ...formData.facilities.mic_wired, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：有線2本）"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>プロジェクター</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.projector.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      projector: { ...formData.facilities.projector, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.projector.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      projector: { ...formData.facilities.projector, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.projector.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      projector: { ...formData.facilities.projector, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.projector.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    projector: { ...formData.facilities.projector, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：HDMI対応・2台）"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>プロジェクタースタンド</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.projector_stand.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      projector_stand: { ...formData.facilities.projector_stand, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.projector_stand.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      projector_stand: { ...formData.facilities.projector_stand, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.projector_stand.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      projector_stand: { ...formData.facilities.projector_stand, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.projector_stand.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    projector_stand: { ...formData.facilities.projector_stand, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>レーザーポインター</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.pointer.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      pointer: { ...formData.facilities.pointer, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.pointer.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      pointer: { ...formData.facilities.pointer, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.pointer.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      pointer: { ...formData.facilities.pointer, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.pointer.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    pointer: { ...formData.facilities.pointer, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：要確認）"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>録画機器</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.recording_equipment.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      recording_equipment: { ...formData.facilities.recording_equipment, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.recording_equipment.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      recording_equipment: { ...formData.facilities.recording_equipment, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.recording_equipment.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      recording_equipment: { ...formData.facilities.recording_equipment, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.recording_equipment.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    recording_equipment: { ...formData.facilities.recording_equipment, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：録画機器あり）"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>ライブ配信機器</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.livestream_equipment.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      livestream_equipment: { ...formData.facilities.livestream_equipment, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.livestream_equipment.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      livestream_equipment: { ...formData.facilities.livestream_equipment, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.livestream_equipment.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      livestream_equipment: { ...formData.facilities.livestream_equipment, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.livestream_equipment.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    livestream_equipment: { ...formData.facilities.livestream_equipment, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>同時通訳ブース</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.interpreter_booth.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      interpreter_booth: { ...formData.facilities.interpreter_booth, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.interpreter_booth.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      interpreter_booth: { ...formData.facilities.interpreter_booth, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.interpreter_booth.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      interpreter_booth: { ...formData.facilities.interpreter_booth, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.interpreter_booth.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    interpreter_booth: { ...formData.facilities.interpreter_booth, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>音響システム</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.sound_system.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      sound_system: { ...formData.facilities.sound_system, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.sound_system.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      sound_system: { ...formData.facilities.sound_system, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.sound_system.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      sound_system: { ...formData.facilities.sound_system, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.sound_system.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    sound_system: { ...formData.facilities.sound_system, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：大型スピーカー完備）"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>照明調整</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.lighting_control.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      lighting_control: { ...formData.facilities.lighting_control, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.lighting_control.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      lighting_control: { ...formData.facilities.lighting_control, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.lighting_control.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      lighting_control: { ...formData.facilities.lighting_control, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.lighting_control.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    lighting_control: { ...formData.facilities.lighting_control, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：調光可能）"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>空調設備</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.air_conditioning.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      air_conditioning: { ...formData.facilities.air_conditioning, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.air_conditioning.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      air_conditioning: { ...formData.facilities.air_conditioning, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.air_conditioning.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      air_conditioning: { ...formData.facilities.air_conditioning, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.air_conditioning.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    air_conditioning: { ...formData.facilities.air_conditioning, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：個別空調）"
+              />
+            </EquipmentItem>
+
+            <EquipmentItem>
+              <EquipmentLabel>Wi-Fi</EquipmentLabel>
+              <TriStateSelector>
+                <TriStateOption
+                  selected={formData.facilities.wifi.status === 'yes'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      wifi: { ...formData.facilities.wifi, status: 'yes' }
+                    }
+                  })}
+                >
+                  あり
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.wifi.status === 'no'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      wifi: { ...formData.facilities.wifi, status: 'no' }
+                    }
+                  })}
+                >
+                  なし
+                </TriStateOption>
+                <TriStateOption
+                  selected={formData.facilities.wifi.status === 'unknown'}
+                  onClick={() => setFormData({
+                    ...formData,
+                    facilities: {
+                      ...formData.facilities,
+                      wifi: { ...formData.facilities.wifi, status: 'unknown' }
+                    }
+                  })}
+                >
+                  不明
+                </TriStateOption>
+              </TriStateSelector>
+              <NotesInput
+                value={formData.facilities.wifi.notes}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  facilities: {
+                    ...formData.facilities,
+                    wifi: { ...formData.facilities.wifi, notes: e.target.value }
+                  }
+                })}
+                placeholder="備考（例：高速WiFi完備）"
+              />
+            </EquipmentItem>
+          </EquipmentGrid>
         </Section>
 
         {/* 料金情報 */}
