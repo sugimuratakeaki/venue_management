@@ -157,13 +157,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       ]
     },
     {
-      section: '予約管理',
-      items: [
-        { id: 'reservation', label: '予約管理', icon: '📅' },
-        { id: 'calendar', label: 'カレンダー', icon: '📆' },
-      ]
-    },
-    {
       section: '管理',
       items: [
         { id: 'users', label: 'ユーザー管理', icon: '👥' },

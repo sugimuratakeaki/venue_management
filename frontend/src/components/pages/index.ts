@@ -7,7 +7,5 @@ export { VenueEditPage } from './VenueEditPage/VenueEditPage';
 export { VenueSearchPage } from './VenueSearchPage/VenueSearchPage';
 export { AISupportPage } from './AISupportPage/AISupportPage';
 export { PasswordResetPage } from './PasswordResetPage/PasswordResetPage';
-export { ReservationManagePage } from './ReservationManagePage/ReservationManagePage';
-export { CalendarPage } from './CalendarPage/CalendarPage';
 export { UserManagePage } from './UserManagePage/UserManagePage';
 export { SystemSettingsPage } from './SystemSettingsPage/SystemSettingsPage';
