@@ -699,14 +699,6 @@ export const VenueSearchPage: React.FC<VenueSearchPageProps> = ({ onBack, onVenu
           <Text size="lg" weight="semibold">
             検索結果: {searchResults.length}件
           </Text>
-          <div style={{ display: 'flex', gap: theme.spacing.md }}>
-            <Button variant="outline" size="small">
-              CSV出力
-            </Button>
-            <Button variant="outline" size="small">
-              印刷
-            </Button>
-          </div>
         </ResultsHeader>
 
         {searchResults.length > 0 && (

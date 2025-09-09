@@ -240,9 +240,6 @@ export const CalendarPage: React.FC = () => {
             </MonthNavigation>
             <div>
               <Button size="small" variant="outline">今日</Button>
-              <Button size="small" variant="outline" style={{ marginLeft: '8px' }}>
-                印刷
-              </Button>
             </div>
           </CalendarHeader>
 

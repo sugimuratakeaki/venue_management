@@ -164,12 +164,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       ]
     },
     {
-      section: 'レポート',
-      items: [
-        { id: 'report-compare', label: '会場比較', icon: '🔄' },
-      ]
-    },
-    {
       section: '管理',
       items: [
         { id: 'users', label: 'ユーザー管理', icon: '👥' },

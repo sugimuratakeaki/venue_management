@@ -682,12 +682,6 @@ export const VenueDetail: React.FC<VenueDetailProps> = ({ venue, onBack, onEdit 
           <Button variant="primary" fullWidth onClick={onEdit}>
             編集する
           </Button>
-          <Button variant="outline" fullWidth>
-            PDFでエクスポート
-          </Button>
-          <Button variant="outline" fullWidth>
-            印刷する
-          </Button>
         </ActionButtons>
       </MainCard>
     </Container>

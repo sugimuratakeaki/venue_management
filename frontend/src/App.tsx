@@ -13,7 +13,6 @@ import {
   PasswordResetPage,
   ReservationManagePage,
   CalendarPage,
-  ComparisonReportPage,
   UserManagePage,
   SystemSettingsPage
 } from './components/pages';
@@ -30,7 +29,6 @@ type PageType =
   | 'password-reset'
   | 'reservation'
   | 'calendar'
-  | 'report-compare'
   | 'users'
   | 'settings';
 
@@ -61,7 +59,6 @@ function App() {
       case 'ai-support':
       case 'reservation':
       case 'calendar':
-      case 'report-compare':
       case 'users':
       case 'settings':
         setCurrentPage(page as PageType);
@@ -177,16 +174,6 @@ function App() {
               カレンダー
             </h1>
             <CalendarPage />
-          </>
-        );
-      
-      case 'report-compare':
-        return (
-          <>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '24px' }}>
-              会場比較レポート
-            </h1>
-            <ComparisonReportPage />
           </>
         );
       
